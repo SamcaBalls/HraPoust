@@ -5,21 +5,28 @@ using TMPro;
 
     public class LobbyPreviewUI : MonoBehaviour
     {
-        public TMP_Text lobbyNameText;
-        private CSteamID lobbyID;
-        [SerializeField]
-        private SteamLobby steamLobby;
+    public TMP_Text lobbyNameText;
+    private CSteamID lobbyID;
+    [SerializeField]
+    private SteamLobby steamLobby;
+
+    [SerializeField]
+    private GameObject privateImage;
 
 
-        public void SetLobbyInfo(CSteamID id, string lobbyName, string hostAddress)
+    public void SetLobbyInfo(CSteamID id, string lobbyName, string hostAddress)
+    {
+        lobbyID = id;
+        if (lobbyNameText != null)
+            lobbyNameText.text = lobbyName;
+        if(SteamMatchmaking.GetLobbyData(lobbyID, "private") == "false")
         {
-            lobbyID = id;
-            if (lobbyNameText != null)
-                lobbyNameText.text = lobbyName;
-        }
-
-        public void OnJoinClicked()
-        {
-            steamLobby.JoinLobby(lobbyID);
+            privateImage.SetActive(false);
         }
     }
+
+    public void OnJoinClicked()
+    {
+        steamLobby.JoinLobby(lobbyID);
+    }
+}

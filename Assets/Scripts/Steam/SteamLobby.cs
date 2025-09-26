@@ -22,6 +22,7 @@ using TMPro;
         [SerializeField] TMP_InputField inputFieldHost;
         [SerializeField] TMP_InputField inputFieldClient;
         [SerializeField] PasswordUI passwordUI;
+        [SerializeField] GameObject warningText;
         bool privateLobby = false;
 
         private Callback<LobbyCreated_t> lobbyCreated;
@@ -68,7 +69,14 @@ using TMPro;
 
         public void HostLobby()
         {
-            if (!SteamManager.Initialized)
+        if (string.IsNullOrWhiteSpace(inputFieldHost.text) && privateLobby)
+        {
+            warningText.SetActive(true);
+            return;
+        }
+
+
+        if (!SteamManager.Initialized)
             {
                 if (!waitingForSteam)
                 {
@@ -78,9 +86,11 @@ using TMPro;
                 return;
             }
 
+            panelSwapper.SwapPanel("LobbyPanel");
+
             RegisterCallbacks();
 
-            SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, networkManager.maxConnections);
+            SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 8);
 
             Debug.Log(privateLobby
                 ? "Požadavek na vytvoření PUBLIC lobby s heslem odeslán"
@@ -123,7 +133,10 @@ using TMPro;
 
             // reset flagu pro jistotu
             privateLobby = false;
-        }
+            dropdown.value = 0;
+            inputFieldHost.text = "";
+            warningText.SetActive(false);
+    }
 
 
         void OnGameLobbyJoinRequested(GameLobbyJoinRequested_t callback)
@@ -222,8 +235,8 @@ using TMPro;
 
         public void OnDropdownChange()
         {
-            privateLobby = dropdown.value == 1; 
-            
+            privateLobby = dropdown.value == 1;
+            Debug.Log("PrivateLobby: " + privateLobby);
             inputFieldHost.interactable = privateLobby;
         }
 
