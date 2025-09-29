@@ -350,6 +350,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 2f5dccf620878f84bb81c9d9ba7a9558, type: 3}
+--- !u!1 &978680945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 978680947}
+  - component: {fileID: 978680946}
+  m_Layer: 0
+  m_Name: MaterialLibrary
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &978680946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978680945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac6f69b4952f02648b03ad7c9c310bed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  accesoriesColors:
+  - {fileID: 2100000, guid: 87c0c3a65ff64bb43a3bd106d6a8bd41, type: 2}
+  - {fileID: 2100000, guid: 2e4c3daef3961424198b6f792fec2c1e, type: 2}
+  - {fileID: 2100000, guid: 2971b9e0c8fb18a4480d44828f6b66fd, type: 2}
+  - {fileID: 2100000, guid: aae0d4ad9978f5b4a86530f52677881d, type: 2}
+  - {fileID: 2100000, guid: 6e587a98312390a43ba75d72878304b5, type: 2}
+  - {fileID: 2100000, guid: 7b42e009c55636e448b099d49252b6bf, type: 2}
+  - {fileID: 2100000, guid: 68c44afd40438574295082da1bd3c43a, type: 2}
+  skinColors:
+  - {fileID: 2100000, guid: 75c611de7ec8afc4f87af130f8344439, type: 2}
+  - {fileID: 2100000, guid: b775f28c86cad75408fc47883bcfd2b5, type: 2}
+  - {fileID: 2100000, guid: 74f4f2c6ea119514ca2192a3914a43a1, type: 2}
+  - {fileID: 2100000, guid: edd44707c8ec0a746a83b5ad8e48ba2d, type: 2}
+  - {fileID: 2100000, guid: bb99b8192630fd14fb150a92fca7273c, type: 2}
+  - {fileID: 2100000, guid: f4e990e0b0791fe4fb782e01eea42944, type: 2}
+  - {fileID: 2100000, guid: 8117e79ad9beaea4e95f578040e2b8b7, type: 2}
+  hairColors:
+  - {fileID: 2100000, guid: 14cb275ce1ebba24eaadadda1a3d52b7, type: 2}
+  - {fileID: 2100000, guid: b5a7f6b4d0d93f24b9f16ba473831046, type: 2}
+  - {fileID: 2100000, guid: 3f5147bb864697e49a6a7d40d050cc76, type: 2}
+  - {fileID: 2100000, guid: 64ba554313437114dbea638bb5ad9a0d, type: 2}
+  - {fileID: 2100000, guid: 6502ba85d545ff74781c1e529ff2255c, type: 2}
+  - {fileID: 2100000, guid: acb60a0682ca2c54b83af0515e9ef7a4, type: 2}
+  - {fileID: 2100000, guid: b9144a626ad310245bbfe630c667805c, type: 2}
+--- !u!4 &978680947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 978680945}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -20.710758, y: -7.277664, z: 5.0923996}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1190714972
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -529,3 +597,4 @@ SceneRoots:
   - {fileID: 179024125}
   - {fileID: 913395702}
   - {fileID: 1190714972}
+  - {fileID: 978680947}

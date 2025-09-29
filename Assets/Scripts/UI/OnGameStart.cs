@@ -1,33 +1,26 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class OnGameStart : MonoBehaviour
 {
     [SerializeField] SteamLobby steamLobby;
-    [SerializeField] CanvasGroup fadeGroup; // p�et�hni sem v Inspectoru panel s CanvasGroup
+    [SerializeField] CanvasGroup fadeGroup; // přetáhni sem v Inspectoru panel s CanvasGroup
     [SerializeField] float fadeDuration = 1f;
     [SerializeField] GameObject image;
 
     private void Start()
     {
+        steamLobby.OnLobbyReady += HandleLobbyReady; // Připojím funkci k eventu
         steamLobby.HostLobby();
-        StartCoroutine(WaitForBack());
     }
 
-    private IEnumerator WaitForBack()
+
+    private void HandleLobbyReady()
     {
-        yield return new WaitForSeconds(0.1f);
-        if (steamLobby != null)
-        {
-            steamLobby.LeaveLobby();
-            FadeImage(false);
-        }
-        else
-        {
-            WaitForBack();
-        }
-
+        steamLobby.LeaveLobby();
+        FadeImage(false);
     }
+
 
     public void FadeImage(bool fadeIn)
     {

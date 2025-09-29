@@ -20,6 +20,8 @@ public class PlayerStats : NetworkBehaviour
     bool ragdoll = false;
     public bool lockinIn = false;
 
+    [SerializeField] RagdollHandler ragdollHandler;
+
     void Start()
     {
         if (isLocalPlayer)
@@ -57,11 +59,8 @@ public class PlayerStats : NetworkBehaviour
 
         if (fatigue >= maxFatigue && !isSafe)
         {
-            ragdoll = true;
             RpcOnBurnout();
         }
-        if (fatigue < maxFatigue)
-            ragdoll = false;
 
     }
 
@@ -86,12 +85,8 @@ public class PlayerStats : NetworkBehaviour
 
         if (isLocalPlayer)
         {
-            // deaktivujeme player input
-            var move = GetComponent<PlayerMovementHandler>();
-            if (move != null) move.enabled = false;
+            SetRagdoll(true);
 
-            var camMove = GetComponent<PlayerCameraLook>();
-            if(camMove != null) camMove.enabled = false;
 
             // deaktivujeme hlavní kameru
             Camera mainCam = GetComponentInChildren<Camera>();
@@ -108,12 +103,41 @@ public class PlayerStats : NetworkBehaviour
         }
     }
 
-
-    [ClientRpc]
     void RpcOnBurnout()
     {
-        Debug.Log($"{netIdentity.netId} omdlel!");
-        //Ragdoll
+        if (!ragdoll)
+        {
+            SetRagdoll(true);
+            ragdoll = true;
+
+
+            Camera mainCam = GetComponentInChildren<Camera>();
+            if (mainCam != null)
+            {
+                mainCam.enabled = false;
+                mainCam.GetComponent<AudioListener>().enabled = false;
+            }
+
+            // aktivujeme spectator kameru
+            var specCam = GetComponentInChildren<BurnoutCamera>(true);
+            if (specCam != null)
+                specCam.ActivateBurnoutMode();
+        }
+    }
+
+    [Command]
+    public void SetRagdoll(bool on)
+    {
+        var move = GetComponent<PlayerMovementHandler>();
+        if (move != null) move.enabled = false;
+
+        var camMove = GetComponentInChildren<PlayerCameraLook>();
+        if (camMove != null) camMove.enabled = false;
+
+        var charCon = GetComponent<CharacterController>();
+        if (charCon != null) charCon.enabled = false;
+
+        ragdollHandler.SetRagdoll(on, Vector3.forward * 10);
     }
 
     public IEnumerator LockIn()
@@ -124,6 +148,10 @@ public class PlayerStats : NetworkBehaviour
             yield return new WaitForSeconds(0.01f);
             CmdChangeFatigue(fatigue - 1);
         }
+        ragdollHandler.SetRagdoll(false, Vector3.zero);
+        ragdoll = false;
+        lockinIn = false;
     }
+
 
 }

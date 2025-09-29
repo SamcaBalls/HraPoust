@@ -34,7 +34,12 @@ using TMPro;
         private bool callbacksRegistered = false;
         private bool waitingForSteam = false;
 
-        void Awake()
+        public event System.Action OnLobbyReady;
+
+        bool startup = true;
+
+
+    void Awake()
         {
             if (instance == null)
                 instance = this;
@@ -116,7 +121,13 @@ using TMPro;
                 return;
             }
 
-            lobbyID = callback.m_ulSteamIDLobby;
+            if (startup)
+            {
+                OnLobbyReady?.Invoke(); // tady se spustí event
+                startup = false;
+            }
+
+        lobbyID = callback.m_ulSteamIDLobby;
             var lobby = new CSteamID(lobbyID);
 
             Debug.Log("Lobby vytvořeno. ID: " + lobbyID);
