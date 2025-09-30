@@ -44,6 +44,10 @@ public class PlayerStats : NetworkBehaviour
         {
             CmdTakeDamage(10);
         }
+        if (Input.GetKeyDown(KeyCode.L)) 
+        {
+            StartCoroutine(LockIn());
+        }
     }
 
     void HandleFatigue()
@@ -52,7 +56,7 @@ public class PlayerStats : NetworkBehaviour
 
         float delta = baseFatigueRate * Time.deltaTime;
 
-        if (Input.GetKey(KeyCode.LeftShift)) // běží → víc únavy
+        if (Input.GetKey(KeyCode.LeftShift)) 
             delta += runFatigueRate * Time.deltaTime;
 
         CmdChangeFatigue(fatigue + delta);
@@ -128,16 +132,23 @@ public class PlayerStats : NetworkBehaviour
     [Command]
     public void SetRagdoll(bool on)
     {
-        var move = GetComponent<PlayerMovementHandler>();
-        if (move != null) move.enabled = false;
-
-        var camMove = GetComponentInChildren<PlayerCameraLook>();
-        if (camMove != null) camMove.enabled = false;
+        MovementEnabled(false);
 
         var charCon = GetComponent<CharacterController>();
         if (charCon != null) charCon.enabled = false;
 
-        ragdollHandler.SetRagdoll(on, Vector3.forward * 10);
+        Vector3 pushDir = -transform.forward * 10f;
+
+        ragdollHandler.SetRagdoll(on, pushDir);
+    }
+
+    public void MovementEnabled(bool on)
+    {
+        var move = GetComponent<PlayerMovementHandler>();
+        if (move != null) move.enabled = on;
+
+        var camMove = GetComponentInChildren<PlayerCameraLook>();
+        if (camMove != null) camMove.enabled = on;
     }
 
     public IEnumerator LockIn()
@@ -150,6 +161,7 @@ public class PlayerStats : NetworkBehaviour
         }
         ragdollHandler.SetRagdoll(false, Vector3.zero);
         ragdoll = false;
+        MovementEnabled(true);
         lockinIn = false;
     }
 

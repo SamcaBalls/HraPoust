@@ -3,12 +3,17 @@ using Mirror;
 
 public class HideLocalPlayerModel : NetworkBehaviour
 {
-    [SerializeField] private GameObject playerModel; // všechny meshe, co se mají skrýt
+    [SerializeField] private GameObject[] playerParts;
 
     public override void OnStartLocalPlayer()
     {
         // skryj model jen pro sebe
-        if (playerModel != null)
-            playerModel.SetActive(false);
+        if (playerParts.Length != 0)
+        {
+            foreach (var part in playerParts)
+            {
+                part.SetActive(false);
+            }
+        }
     }
 }
