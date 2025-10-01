@@ -3,26 +3,16 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class BurnoutCamera : NetworkBehaviour
+public class BurnoutCamera : CameraScript
 {
     [Header("Follow Cam Settings")]
     public float distance = 5f;
     public float height = 2f;
-    public float rotationSpeed = 5f;
 
-    [SerializeField] private Camera cam;
     [SerializeField] private Transform player;
 
     private float orbitY = 0f; // horizontální úhel
     private float orbitX = 20f; // vertikální úhel
-
-    public void ActivateBurnoutMode()
-    {
-        if (!isLocalPlayer) return;
-
-        cam.gameObject.SetActive(true);
-        FollowCurrentPlayer();
-    }
 
     private void Update()
     {
@@ -53,8 +43,8 @@ public class BurnoutCamera : NetworkBehaviour
 
     private void HandleMouseInput()
     {
-        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
-        float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
+        float mouseX = Input.GetAxis("Mouse X") * settings.sensitivity * 3;
+        float mouseY = Input.GetAxis("Mouse Y") * settings.sensitivity * 3;
 
         orbitY += mouseX;
         orbitX -= mouseY;

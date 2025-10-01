@@ -21,6 +21,7 @@ public class PlayerStats : NetworkBehaviour
     public bool lockinIn = false;
 
     [SerializeField] RagdollHandler ragdollHandler;
+    [SerializeField] CameraSwapper cameraSwapper;
 
     void Start()
     {
@@ -91,19 +92,9 @@ public class PlayerStats : NetworkBehaviour
         {
             SetRagdoll(true);
 
-
-            // deaktivujeme hlavní kameru
-            Camera mainCam = GetComponentInChildren<Camera>();
-            if (mainCam != null)
-            {
-                mainCam.enabled = false;
-                mainCam.GetComponent<AudioListener>().enabled = false;
-            }
-
-            // aktivujeme spectator kameru
-            var specCam = GetComponentInChildren<SpectatorFollowCam>(true);
-            if (specCam != null)
-                specCam.ActivateSpectator();
+            Debug.Log("SwapSpec");
+            // Switch na Spectator kameru
+            cameraSwapper.SwapCamera(cameraSwapper.cameras[1]);
         }
     }
 
@@ -115,17 +106,7 @@ public class PlayerStats : NetworkBehaviour
             ragdoll = true;
 
 
-            Camera mainCam = GetComponentInChildren<Camera>();
-            if (mainCam != null)
-            {
-                mainCam.enabled = false;
-                mainCam.GetComponent<AudioListener>().enabled = false;
-            }
-
-            // aktivujeme spectator kameru
-            var specCam = GetComponentInChildren<BurnoutCamera>(true);
-            if (specCam != null)
-                specCam.ActivateBurnoutMode();
+            cameraSwapper.SwapCamera(cameraSwapper.cameras[2]);
         }
     }
 
@@ -149,7 +130,11 @@ public class PlayerStats : NetworkBehaviour
 
         var camMove = GetComponentInChildren<PlayerCameraLook>();
         if (camMove != null) camMove.enabled = on;
+
+        var character = GetComponent<CharacterController>();
+        if(character != null) character.enabled = on;
     }
+
 
     public IEnumerator LockIn()
     {
@@ -162,6 +147,7 @@ public class PlayerStats : NetworkBehaviour
         ragdollHandler.SetRagdoll(false, Vector3.zero);
         ragdoll = false;
         MovementEnabled(true);
+        cameraSwapper.SwapCamera(cameraSwapper.cameras[0]);
         lockinIn = false;
     }
 

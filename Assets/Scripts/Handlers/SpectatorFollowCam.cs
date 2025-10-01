@@ -2,28 +2,24 @@ using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
 
-public class SpectatorFollowCam : NetworkBehaviour
+public class SpectatorFollowCam : CameraScript
 {
     [Header("Follow Cam Settings")]
     public float distance = 5f;
     public float height = 2f;
-    public float rotationSpeed = 5f;
 
     private List<PlayerStats> livePlayers = new List<PlayerStats>();
     private int currentIndex = 0;
 
-    [SerializeField] private Camera cam;
-
     private float orbitY = 0f; // horizontální úhel
     private float orbitX = 20f; // vertikální úhel
 
-    public void ActivateSpectator()
-    {
-        if (!isLocalPlayer) return;
 
-        cam.gameObject.SetActive(true);
+    public override void ActivateCamera()
+    {
+        base.ActivateCamera();
         UpdateLivePlayers();
-        FollowCurrentPlayer();
+        HandleMouseInput();
     }
 
     private void Update()
@@ -40,8 +36,8 @@ public class SpectatorFollowCam : NetworkBehaviour
 
     private void HandleMouseInput()
     {
-        float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
-        float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
+        float mouseX = Input.GetAxis("Mouse X") * settings.sensitivity * 3;
+        float mouseY = Input.GetAxis("Mouse Y") * settings.sensitivity * 3;
 
         orbitY += mouseX;
         orbitX -= mouseY;

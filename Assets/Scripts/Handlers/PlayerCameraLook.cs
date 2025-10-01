@@ -4,30 +4,27 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.XR;
 
-public class PlayerCameraLook : NetworkBehaviour
+public class PlayerCameraLook : CameraScript
 {
     [Header("References")]
     public Transform playerBody; // objekt hráèe, kolem kterého se kamera otáèí (vìtšinou parent)
 
     [Header("Settings")]
-    public float sensitivity = 100f;
     public float clampAngle = 85f;
 
     private Vector2 lookInput;
     private float xRotation = 0f;
 
     [SerializeField] private InputActionReference look;
-    [SerializeField] private Camera playerCamera;
-
     public override void OnStartLocalPlayer()
     {
         base.OnStartLocalPlayer();
 
-        if (playerCamera != null)
+        if (gameObject != null)
         {
-            playerCamera.gameObject.SetActive(true);
-            playerCamera.tag = "MainCamera"; // dùležité, aby fungovalo Camera.main
-            playerCamera.GetComponent<AudioListener>().enabled = true;
+            cam.gameObject.SetActive(true);
+            cam.tag = "MainCamera"; // dùležité, aby fungovalo Camera.main
+            cam.GetComponent<AudioListener>().enabled = true;
         }
 
         Cursor.lockState = CursorLockMode.Locked;
@@ -39,10 +36,10 @@ public class PlayerCameraLook : NetworkBehaviour
         base.OnStartClient();
 
         // Vypne kamery u jiných hráèù
-        if (!isLocalPlayer && playerCamera != null)
+        if (!isLocalPlayer && gameObject != null)
         {
-            playerCamera.gameObject.SetActive(false);
-            playerCamera.GetComponent<AudioListener>().enabled = false;
+            cam.gameObject.SetActive(false);
+            cam.GetComponent<AudioListener>().enabled = false;
         }
     }
 
@@ -52,8 +49,9 @@ public class PlayerCameraLook : NetworkBehaviour
         lookInput = look.action.ReadValue<Vector2>();
 
         // myš/joystick input
-        float mouseX = lookInput.x * sensitivity * Time.deltaTime;
-        float mouseY = lookInput.y * sensitivity * Time.deltaTime;
+        float mouseX = lookInput.x * settings.sensitivity;
+        float mouseY = lookInput.y * settings.sensitivity;
+
 
         // vertikální rotace (kamera)
         xRotation -= mouseY;

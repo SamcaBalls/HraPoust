@@ -64,7 +64,7 @@ namespace SteamLobbyTutorial
             {
                 animator.SetFloat("MoveX", input.x, 0.1f, Time.deltaTime);
                 animator.SetFloat("MoveY", input.y, 0.1f, Time.deltaTime);
-                animator.SetFloat("Speed", direction.magnitude * moveSpeed, 0.1f, Time.deltaTime);
+                animator.SetFloat("Speed", direction.magnitude * moveSpeed, 0.02f, Time.deltaTime);
 
                 animator.SetBool("isRunning", isSprinting);
             }
