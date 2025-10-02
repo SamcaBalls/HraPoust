@@ -7,12 +7,16 @@ public class HideLocalPlayerModel : NetworkBehaviour
 
     public override void OnStartLocalPlayer()
     {
-        // skryj model jen pro sebe
+        GiveHead(false);
+    }
+
+    public void GiveHead(bool head)
+    {
         if (playerParts.Length != 0)
         {
             foreach (var part in playerParts)
             {
-                part.SetActive(false);
+                part.SetActive(head);
             }
         }
     }

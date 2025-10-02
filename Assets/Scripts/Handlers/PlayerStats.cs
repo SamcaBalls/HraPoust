@@ -22,6 +22,7 @@ public class PlayerStats : NetworkBehaviour
 
     [SerializeField] RagdollHandler ragdollHandler;
     [SerializeField] CameraSwapper cameraSwapper;
+    [SerializeField] HideLocalPlayerModel headShower;
 
     void Start()
     {
@@ -121,6 +122,7 @@ public class PlayerStats : NetworkBehaviour
         Vector3 pushDir = -transform.forward * 10f;
 
         ragdollHandler.SetRagdoll(on, pushDir);
+        headShower.GiveHead(true);
     }
 
     public void MovementEnabled(bool on)
@@ -148,6 +150,7 @@ public class PlayerStats : NetworkBehaviour
         ragdoll = false;
         MovementEnabled(true);
         cameraSwapper.SwapCamera(cameraSwapper.cameras[0]);
+        headShower.GiveHead(false);
         lockinIn = false;
     }
 
