@@ -243,8 +243,42 @@ using TMPro;
             panelSwapper.SwapPanel("MainPanel");
         }
 
+    public void CloseLobby()
+    {
+        if (lobbyID == 0)
+            return;
+        Debug.Log("Funguje");
+        var lobby = new CSteamID(lobbyID);
+        CSteamID owner = SteamMatchmaking.GetLobbyOwner(lobby);
 
-        public void OnDropdownChange()
+        // Zkontroluj, jestli jsem host
+        if (owner == SteamUser.GetSteamID())
+        {
+            // Uzavřu lobby (už nebude joinable)
+            SteamMatchmaking.SetLobbyJoinable(lobby, false);
+            SteamMatchmaking.SetLobbyData(lobby, "closed", "true");
+            Debug.Log("Lobby uzavřena (SetLobbyJoinable false)");
+        }
+
+        // Odejdu normálně
+        SteamMatchmaking.LeaveLobby(lobby);
+        lobbyID = 0;
+
+        // Ukončím síťovou část
+        if (NetworkServer.active && owner == SteamUser.GetSteamID())
+            NetworkManager.singleton.StopHost();
+        else if (NetworkClient.isConnected)
+            NetworkManager.singleton.StopClient();
+
+        panelSwapper.gameObject.SetActive(true);
+        gameObject.SetActive(true);
+        Debug.Log("Do hl. menu");
+        panelSwapper.SwapPanel("MainPanel");
+    }
+
+
+
+    public void OnDropdownChange()
         {
             privateLobby = dropdown.value == 1;
             Debug.Log("PrivateLobby: " + privateLobby);

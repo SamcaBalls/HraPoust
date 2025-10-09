@@ -11,58 +11,57 @@ public class Headbob : MonoBehaviour
     [SerializeField] private Transform _cameraHolder = null;
     [SerializeField] private PlayerMovementHandler movScript;
 
-    private Vector3 _startPos;
+    private Vector3 _startLocalPos;
+    private float _bobTimer = 0f;
 
     private void Awake()
     {
-        _startPos = _camera.localPosition;
+        if (_camera == null || _cameraHolder == null)
+        {
+            Debug.LogError("Camera or CameraHolder not assigned!");
+            enabled = false;
+            return;
+        }
+        _startLocalPos = _camera.localPosition;
     }
 
-    void Update()
+    void LateUpdate()
     {
         if (!_enable) return;
-        CheckMotion();
-        ResetPosition();
-        _camera.LookAt(FocusTarget());
+
+        // spočítáme bob podle pohybu
+        Vector3 bobOffset = CalculateHeadbob();
+
+        // aplikujeme headbob relativně k původní lokální pozici kamery
+        _camera.localPosition = _startLocalPos + bobOffset;
+
+        // Kamera se může dál volně otáčet podle držáku
+        // (_cameraHolder.transform.rotation se stále uplatní)
     }
 
-    private Vector3 FootStepMotion(float adjustedFrequency)
+    private Vector3 CalculateHeadbob()
     {
-        Vector3 pos = Vector3.zero;
-        pos.y += Mathf.Sin(Time.time * adjustedFrequency) * _Amplitude;
-        pos.x += Mathf.Cos(Time.time * adjustedFrequency / 2) * _Amplitude * 2;
-        return pos;
+        Vector3 horizontalVelocity = new Vector3(movScript.controller.velocity.x, 0, movScript.controller.velocity.z);
+        float speed = horizontalVelocity.magnitude;
+
+        if (speed < 0.1f)
+        {
+            _bobTimer = 0f;
+            return Vector3.zero;
+        }
+
+        // rychlost hráče ovlivní frekvenci víc než lineárně
+        float speedFactor = Mathf.Pow(speed / movScript.moveSpeed, 2.5f); // 1.5 můžeš upravit podle pocitu
+        float adjustedFrequency = _BaseFrequency * speedFactor;
+
+        // FPS nezávislý timer
+        _bobTimer += Time.deltaTime * adjustedFrequency;
+
+        Vector3 offset = Vector3.zero;
+        offset.y = Mathf.Sin(_bobTimer) * _Amplitude;           // vertikální bob
+        offset.x = Mathf.Cos(_bobTimer / 2f) * _Amplitude * 2;  // horizontální bob
+
+        return offset;
     }
 
-    private void CheckMotion()
-    {
-        // rychlost hráče v rovině
-        float speed = new Vector3(movScript.controller.velocity.x, 0, movScript.controller.velocity.z).magnitude;
-
-        if (speed < 0.1f) return; // stojí → žádný bobbing
-
-        // přizpůsobení frekvence rychlosti
-        float adjustedFrequency = _BaseFrequency * (speed / movScript.moveSpeed);
-        PlayMotion(FootStepMotion(adjustedFrequency));
-    }
-
-    private void PlayMotion(Vector3 motion)
-    {
-        _camera.localPosition += motion;
-    }
-
-    private Vector3 FocusTarget()
-    {
-        Vector3 pos = new Vector3(transform.position.x,
-                                  transform.position.y + _cameraHolder.localPosition.y,
-                                  transform.position.z);
-        pos += _cameraHolder.forward * 15.0f;
-        return pos;
-    }
-
-    private void ResetPosition()
-    {
-        if (_camera.localPosition == _startPos) return;
-        _camera.localPosition = Vector3.Lerp(_camera.localPosition, _startPos, 1 * Time.deltaTime);
-    }
 }

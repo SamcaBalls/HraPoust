@@ -4,28 +4,29 @@ using UnityEngine;
 public class OnGameStart : MonoBehaviour
 {
     [SerializeField] SteamLobby steamLobby;
-    [SerializeField] CanvasGroup fadeGroup; // přetáhni sem v Inspectoru panel s CanvasGroup
+    [SerializeField] CanvasGroup fadeGroup;
     [SerializeField] float fadeDuration = 1f;
     [SerializeField] GameObject image;
 
     private void Start()
     {
-        steamLobby.OnLobbyReady += HandleLobbyReady; // Připojím funkci k eventu
+        steamLobby.OnLobbyReady += HandleLobbyReady;
         steamLobby.HostLobby();
     }
 
-
     private void HandleLobbyReady()
     {
-        steamLobby.LeaveLobby();
-        FadeImage(false);
+        Debug.Log("Lobby ready – provádím fade a zavírám lobby...");
+        StartCoroutine(CloseAndFade());
     }
 
-
-    public void FadeImage(bool fadeIn)
+    private IEnumerator CloseAndFade()
     {
-        Debug.Log("Fade");
-        StartCoroutine(FadeRoutine(fadeIn));
+        // Počkej chvilku, aby Steam stihl vše dokončit
+        yield return new WaitForSeconds(0.5f);
+
+        steamLobby.CloseLobby(); // bezpečně uzavře lobby
+        yield return FadeRoutine(false); // fade efekt
     }
 
     private IEnumerator FadeRoutine(bool fadeIn)
@@ -51,4 +52,3 @@ public class OnGameStart : MonoBehaviour
         }
     }
 }
-

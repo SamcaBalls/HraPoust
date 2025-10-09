@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b583b1fe23ba9ea4b8963c08665e4998, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  masterVolume: 1
-  sfxVolume: 1
+  masterVolume: 0.69356203
+  sfxVolume: 0.7462047
   musicVolume: 1
-  sensitivity: 0.652
+  voiceChatVolume: 0.56736344
+  FOV: 0
+  sensitivity: 0.54985136
+  micIndex: 0
+  micName: Headset Microphone (Realtek(R) Audio)

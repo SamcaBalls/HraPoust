@@ -76,35 +76,53 @@ using Steamworks;
             }
         }
 
-        public void OnPlayButtonClicked()
+    public void OnPlayButtonClicked()
+    {
+        if (!NetworkServer.active) return;
+
+        bool allReady = true;
+        foreach (var player in PlayerLobbyHandler.allPlayers)
         {
-            if (NetworkServer.active)
+            if (!player.isReady)
             {
-                CustomNetworkManager.singleton.ServerChangeScene("GameplayScene");
+                allReady = false;
+                break;
             }
         }
 
-        public void RegisterPlayer(PlayerLobbyHandler player)
+        if (allReady)
+        {
+            CustomNetworkManager.singleton.ServerChangeScene("GameplayScene");
+        }
+        else
+        {
+            Debug.Log("Nìkteøí hráèi nejsou pøipraveni!");
+        }
+    }
+
+
+    public void RegisterPlayer(PlayerLobbyHandler player)
         {
             player.transform.SetParent(playerListParent, false);
             UpdatePlayerLobbyUI();
         }
 
-        [Server]
-        public void CheckAllPlayersReady()
+    [Server]
+    public void CheckAllPlayersReady()
+    {
+        foreach (var player in PlayerLobbyHandler.allPlayers)
         {
-            foreach (var player in playerLobbyHandlers)
+            if (!player.isReady)
             {
-                if (!player.isReady)
-                {
-                    RpcSetPlayButtonInteractable(false);
-                    return;
-                }
+                RpcSetPlayButtonInteractable(false);
+                return;
             }
-            RpcSetPlayButtonInteractable(true);
         }
+        RpcSetPlayButtonInteractable(true);
+    }
 
-        [ClientRpc]
+
+    [ClientRpc]
         void RpcSetPlayButtonInteractable(bool truthStatus)
         {
             playGameButton.interactable = truthStatus;

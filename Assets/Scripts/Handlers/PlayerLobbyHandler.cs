@@ -12,7 +12,22 @@ using System.Collections;
         public Button readyButton;
         public TextMeshProUGUI nameText;
 
-        void Start()
+    public static List<PlayerLobbyHandler> allPlayers = new List<PlayerLobbyHandler>();
+
+    public override void OnStartClient()
+    {
+        base.OnStartClient();
+        allPlayers.Add(this);
+        StartCoroutine(RegisterPlayerWhenReady());
+    }
+
+    public override void OnStopClient()
+    {
+        base.OnStopClient();
+        allPlayers.Remove(this);
+    }
+
+    void Start()
         {
             readyButton.interactable = isLocalPlayer;   
         }
@@ -24,11 +39,6 @@ using System.Collections;
             isReady = false;
         }
 
-        public override void OnStartClient()
-        {
-            base.OnStartClient();
-            StartCoroutine(RegisterPlayerWhenReady());
-        }
 
         private IEnumerator RegisterPlayerWhenReady()
         {
@@ -40,14 +50,14 @@ using System.Collections;
         }
 
 
-        [Command]
-        void CmdSetReady()
-        {
-            isReady = !isReady;
-            OnReadyStatusChanged(!isReady, isReady);
-        }
+    [Command]
+    void CmdSetReady()
+    {
+        isReady = !isReady; // Mirror sám zavolá OnReadyStatusChanged
+    }
 
-        public void OnReadyButtonClicked()
+
+    public void OnReadyButtonClicked()
         {
             CmdSetReady();
         }

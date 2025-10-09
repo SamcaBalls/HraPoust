@@ -7,8 +7,6 @@ using TMPro;
     {
     public TMP_Text lobbyNameText;
     private CSteamID lobbyID;
-    [SerializeField]
-    private SteamLobby steamLobby;
 
     [SerializeField]
     private GameObject privateImage;
@@ -27,6 +25,6 @@ using TMPro;
 
     public void OnJoinClicked()
     {
-        steamLobby.JoinLobby(lobbyID);
+        FindAnyObjectByType<SteamLobby>().JoinLobby(lobbyID);
     }
 }

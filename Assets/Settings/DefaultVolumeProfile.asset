@@ -14,13 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   lift:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 1, y: 1, z: 1, w: 0}
   gamma:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 1, y: 1, z: 1, w: 0}
   gain:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 1, y: 1, z: 1, w: 0}
 --- !u!114 &-8270506406425502121
 MonoBehaviour:
@@ -164,7 +164,7 @@ MonoBehaviour:
     m_Value: 0
   contrast:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 9
   colorFilter:
     m_OverrideState: 1
     m_Value: {r: 1, g: 1, b: 1, a: 1}
@@ -342,6 +342,9 @@ MonoBehaviour:
   skyOcclusionIntensityMultiplier:
     m_OverrideState: 1
     m_Value: 1
+  worldOffset:
+    m_OverrideState: 1
+    m_Value: {x: 0, y: 0, z: 0}
 --- !u!114 &-1216621516061285780
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -363,16 +366,16 @@ MonoBehaviour:
     m_Value: 0.9
   intensity:
     m_OverrideState: 1
-    m_Value: 0
+    m_Value: 1
   scatter:
     m_OverrideState: 1
-    m_Value: 0.7
+    m_Value: 0.785
   clamp:
     m_OverrideState: 1
     m_Value: 65472
   tint:
     m_OverrideState: 1
-    m_Value: {r: 1, g: 1, b: 1, a: 1}
+    m_Value: {r: 0.6698113, g: 0.29252863, b: 0.078987174, a: 1}
   highQualityFiltering:
     m_OverrideState: 1
     m_Value: 0
@@ -462,8 +465,6 @@ MonoBehaviour:
   - {fileID: -6288072647309666549}
   - {fileID: 7518938298396184218}
   - {fileID: -1410297666881709256}
-  - {fileID: -7750755424749557576}
-  - {fileID: -5139089513906902183}
 --- !u!114 &853819529557874667
 MonoBehaviour:
   m_ObjectHideFlags: 3
@@ -478,58 +479,58 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   active: 1
   intensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   tintColor:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {r: 1, g: 1, b: 1, a: 1}
   bloomMip:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   firstFlareIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   secondaryFlareIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   warpedFlareIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   warpedFlareScale:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: {x: 1, y: 1}
   samples:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   sampleDimmer:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.5
   vignetteEffect:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1
   startingPosition:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1.25
   scale:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 1.5
   streaksIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   streaksLength:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.5
   streaksOrientation:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0
   streaksThreshold:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.25
   resolution:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 4
   chromaticAbberationIntensity:
-    m_OverrideState: 1
+    m_OverrideState: 0
     m_Value: 0.5
 --- !u!114 &1052315754049611418
 MonoBehaviour:
