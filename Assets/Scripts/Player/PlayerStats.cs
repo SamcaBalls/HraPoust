@@ -150,7 +150,8 @@ public class PlayerStats : NetworkBehaviour
 
     void SetRagdollAll(bool on, Vector3 force)
     {
-        MovementEnabled(!on);
+        if (isLocalPlayer)
+            MovementEnabled(!on);
 
         var charCon = GetComponent<CharacterController>();
         if (charCon != null) charCon.enabled = !on;
@@ -169,6 +170,9 @@ public class PlayerStats : NetworkBehaviour
 
         var character = GetComponent<CharacterController>();
         if (character != null) character.enabled = on;
+
+        var headbob = GetComponent<Headbob>();
+        if (headbob != null) headbob.enabled = on;
     }
 
     public IEnumerator LockIn()

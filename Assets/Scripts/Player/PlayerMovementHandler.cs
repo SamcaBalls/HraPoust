@@ -65,9 +65,6 @@ namespace SteamLobbyTutorial
                 animator.SetFloat("Speed", direction.magnitude * moveSpeed, 0.02f, Time.deltaTime);
                 animator.SetBool("isRunning", isSprinting);
             }
-
-            if (Input.GetKey(KeyCode.P))
-                pauseMenu.ShowPauseMenu(true);
         }
 
 

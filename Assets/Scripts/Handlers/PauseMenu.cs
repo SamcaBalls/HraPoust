@@ -11,4 +11,10 @@ public class PauseMenu : MonoBehaviour
         canvas.SetActive(show);
         playerStats.MovementEnabled(!show);
     }
+
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.P))
+            ShowPauseMenu(true);
+    }
 }
