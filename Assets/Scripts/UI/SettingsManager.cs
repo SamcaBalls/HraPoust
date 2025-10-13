@@ -2,11 +2,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 public class SettingsManager : MonoBehaviour
 {
     [Header("UI Slidery")]
-    [SerializeField] private Slider sliderMaster; // NOVÉ
+    [SerializeField] private Slider sliderMaster;
     [SerializeField] private Slider sliderSFX;
     [SerializeField] private Slider sliderMusic;
     [SerializeField] private Slider sliderVoicechat;
@@ -18,15 +19,31 @@ public class SettingsManager : MonoBehaviour
 
     [Header("Reference")]
     [SerializeField] private Settings playerSettings;
+    [SerializeField] private Camera cam;
 
-    [SerializeField] Camera cam;
+    // ✅ Nové: uchovává poslední známý seznam mikrofonů
+    private List<string> lastKnownMics = new List<string>();
 
     private void Start()
     {
         PopulateMicDropdown();
         LoadSettingsToUI();
         AddListeners();
+        StartCoroutine(MicCycle());
+
+        // ✅ Inicializace sledování mikrofonů
+        lastKnownMics = new List<string>(Microphone.devices);
     }
+
+    private IEnumerator MicCycle()
+    {
+        while (true)
+        {
+            yield return new WaitForSeconds(2f);
+            CheckForMicChanges();
+        }
+    }
+
 
     private void OnDestroy()
     {
@@ -35,7 +52,7 @@ public class SettingsManager : MonoBehaviour
 
     private void AddListeners()
     {
-        sliderMaster.onValueChanged.AddListener(OnMasterChanged); // NOVÉ
+        sliderMaster.onValueChanged.AddListener(OnMasterChanged);
         sliderSFX.onValueChanged.AddListener(OnSFXChanged);
         sliderMusic.onValueChanged.AddListener(OnMusicChanged);
         sliderVoicechat.onValueChanged.AddListener(OnVoiceChatChanged);
@@ -55,7 +72,7 @@ public class SettingsManager : MonoBehaviour
         micDropdown.onValueChanged.RemoveListener(OnMicChanged);
     }
 
-    private void PopulateMicDropdown()
+    public void PopulateMicDropdown()
     {
         micDropdown.ClearOptions();
         List<string> options = new List<string>(Microphone.devices);
@@ -66,13 +83,15 @@ public class SettingsManager : MonoBehaviour
             micDropdown.value = playerSettings.micIndex;
             micDropdown.RefreshShownValue();
         }
+
+        Debug.Log($"[SettingsManager] Microphones updated: {options.Count} found.");
     }
 
     private void LoadSettingsToUI()
     {
         if (playerSettings == null) return;
 
-        sliderMaster.value = playerSettings.masterVolume; // NOVÉ
+        sliderMaster.value = playerSettings.masterVolume;
         sliderSFX.value = playerSettings.sfxVolume;
         sliderMusic.value = playerSettings.musicVolume;
         sliderVoicechat.value = playerSettings.voiceChatVolume;
@@ -81,14 +100,13 @@ public class SettingsManager : MonoBehaviour
     }
 
     #region Slider Callbacks
-    private void OnMasterChanged(float value) => playerSettings.masterVolume = value; // NOVÉ
+    private void OnMasterChanged(float value) => playerSettings.masterVolume = value;
     private void OnSFXChanged(float value) => playerSettings.sfxVolume = value;
     private void OnMusicChanged(float value) => playerSettings.musicVolume = value;
     private void OnVoiceChatChanged(float value) => playerSettings.voiceChatVolume = value;
     private void OnFOVChanged(float value)
     {
         playerSettings.FOV = value;
-
         cam.fieldOfView = value;
     }
     private void OnSensitivityChanged(float value) => playerSettings.sensitivity = value;
@@ -106,7 +124,7 @@ public class SettingsManager : MonoBehaviour
     #region Save / Load PlayerPrefs
     public void SaveSettings()
     {
-        PlayerPrefs.SetFloat("MasterVolume", playerSettings.masterVolume); // NOVÉ
+        PlayerPrefs.SetFloat("MasterVolume", playerSettings.masterVolume);
         PlayerPrefs.SetFloat("SFXVolume", playerSettings.sfxVolume);
         PlayerPrefs.SetFloat("MusicVolume", playerSettings.musicVolume);
         PlayerPrefs.SetFloat("VoiceChatVolume", playerSettings.voiceChatVolume);
@@ -119,7 +137,7 @@ public class SettingsManager : MonoBehaviour
 
     public void LoadFromPrefs()
     {
-        playerSettings.masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f); // NOVÉ
+        playerSettings.masterVolume = PlayerPrefs.GetFloat("MasterVolume", 1f);
         playerSettings.sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 1f);
         playerSettings.musicVolume = PlayerPrefs.GetFloat("MusicVolume", 1f);
         playerSettings.voiceChatVolume = PlayerPrefs.GetFloat("VoiceChatVolume", 1f);
@@ -130,6 +148,32 @@ public class SettingsManager : MonoBehaviour
         PopulateMicDropdown();
         LoadSettingsToUI();
         Debug.Log("[SettingsManager] Settings loaded from PlayerPrefs.");
+    }
+    #endregion
+
+    #region 🔔 Dynamic Mic Detection
+    private void CheckForMicChanges()
+    {
+        var currentMics = new List<string>(Microphone.devices);
+
+        // pokud se počet nebo názvy liší, aktualizuj dropdown
+        if (currentMics.Count != lastKnownMics.Count)
+        {
+            lastKnownMics = currentMics;
+            PopulateMicDropdown();
+        }
+        else
+        {
+            for (int i = 0; i < currentMics.Count; i++)
+            {
+                if (currentMics[i] != lastKnownMics[i])
+                {
+                    lastKnownMics = currentMics;
+                    PopulateMicDropdown();
+                    break;
+                }
+            }
+        }
     }
     #endregion
 }

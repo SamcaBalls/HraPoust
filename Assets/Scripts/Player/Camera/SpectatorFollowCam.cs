@@ -1,6 +1,7 @@
 using UnityEngine;
 using Mirror;
 using System.Collections.Generic;
+using UnityEngine.SceneManagement;
 
 public class SpectatorFollowCam : CameraScript
 {
@@ -51,6 +52,22 @@ public class SpectatorFollowCam : CameraScript
             if (ps.health > 0) livePlayers.Add(ps);
 
         if (currentIndex >= livePlayers.Count) currentIndex = 0;
+
+        if(livePlayers.Count == 0)
+        {
+            GameOverScene();
+        }
+    }
+
+    private void GameOverScene()
+    {
+        foreach (var conn in NetworkServer.connections.Values)
+        {
+            if (conn.identity != null)
+                NetworkServer.Destroy(conn.identity.gameObject);
+        }
+
+        SceneManager.LoadScene("GameOver");
     }
 
     private void FollowCurrentPlayer()

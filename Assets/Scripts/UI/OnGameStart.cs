@@ -1,54 +1,60 @@
 ﻿using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
-public class OnGameStart : MonoBehaviour
+public class LobbyStarter : MonoBehaviour
 {
-    [SerializeField] SteamLobby steamLobby;
-    [SerializeField] CanvasGroup fadeGroup;
-    [SerializeField] float fadeDuration = 1f;
-    [SerializeField] GameObject image;
+    [SerializeField] private Blackscreen blackscreen;
+    private SteamLobby steamLobby;
 
-    private void Start()
+    void Awake()
     {
+        DontDestroyOnLoad(gameObject); // Zůstane mezi scénami
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (scene.name == "Menu")
+        {
+            Debug.Log("[LobbyStarter] Menu načteno, startuji lobby...");
+            StartCoroutine(StartLobbyRoutine());
+        }
+    }
+
+    private IEnumerator StartLobbyRoutine()
+    {
+        while (steamLobby == null)
+        {
+            steamLobby = FindAnyObjectByType<SteamLobby>();
+            yield return null;
+        }
+
+        while (!SteamManager.Initialized)
+            yield return null;
+
+        if (steamLobby.lobbyID != 0)
+            steamLobby.LeaveLobby();
+
         steamLobby.OnLobbyReady += HandleLobbyReady;
         steamLobby.HostLobby();
     }
 
     private void HandleLobbyReady()
     {
-        Debug.Log("Lobby ready – provádím fade a zavírám lobby...");
-        StartCoroutine(CloseAndFade());
+        Debug.Log("[OnGameStart] Lobby ready!");
+        StartCoroutine(CloseLobbyAndFade());
     }
 
-    private IEnumerator CloseAndFade()
+    private IEnumerator CloseLobbyAndFade()
     {
-        // Počkej chvilku, aby Steam stihl vše dokončit
         yield return new WaitForSeconds(0.5f);
-
-        steamLobby.CloseLobby(); // bezpečně uzavře lobby
-        yield return FadeRoutine(false); // fade efekt
-    }
-
-    private IEnumerator FadeRoutine(bool fadeIn)
-    {
-        image.SetActive(true);
-
-        float start = fadeGroup.alpha;
-        float end = fadeIn ? 1f : 0f;
-        float time = 0f;
-
-        while (time < fadeDuration)
-        {
-            time += Time.deltaTime;
-            fadeGroup.alpha = Mathf.Lerp(start, end, time / fadeDuration);
-            yield return null;
-        }
-
-        fadeGroup.alpha = end;
-
-        if (!fadeIn)
-        {
-            image.SetActive(false);
-        }
+        steamLobby.CloseLobby();
+        yield return StartCoroutine(blackscreen.FadeRoutine(false));
     }
 }

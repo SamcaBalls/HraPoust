@@ -194,6 +194,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13586401}
   m_CullTransparentMesh: 1
+--- !u!1 &19395836
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 19395838}
+  - component: {fileID: 19395837}
+  m_Layer: 0
+  m_Name: LobbyStarter
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &19395837
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19395836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e3ed00a7c1666c48b87ba0d7659c446, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  blackscreen: {fileID: 742915707}
+--- !u!4 &19395838
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 19395836}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -0.44435644, y: 9.442659, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &24826517
 GameObject:
   m_ObjectHideFlags: 0
@@ -2658,7 +2703,7 @@ GameObject:
   m_Component:
   - component: {fileID: 742915704}
   - component: {fileID: 742915705}
-  - component: {fileID: 742915706}
+  - component: {fileID: 742915707}
   m_Layer: 0
   m_Name: Blackscreen
   m_TagString: Untagged
@@ -2694,7 +2739,7 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &742915706
+--- !u!114 &742915707
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2703,10 +2748,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 742915703}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7e3ed00a7c1666c48b87ba0d7659c446, type: 3}
+  m_Script: {fileID: 11500000, guid: 5a36ce13097ce1c4d8972665cd9b3026, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  steamLobby: {fileID: 550017303}
   fadeGroup: {fileID: 742915705}
   fadeDuration: 1
   image: {fileID: 520828754}
@@ -8770,3 +8814,4 @@ SceneRoots:
   - {fileID: 1695253520}
   - {fileID: 329275739}
   - {fileID: 1720153658}
+  - {fileID: 19395838}

@@ -53,6 +53,7 @@ using TMPro;
         void Start()
         {
             networkManager = GetComponentInParent<NetworkManager>();
+            
             panelSwapper.gameObject.SetActive(true);
             SteamAPI.RunCallbacks();
         }
@@ -269,11 +270,13 @@ using TMPro;
             NetworkManager.singleton.StopHost();
         else if (NetworkClient.isConnected)
             NetworkManager.singleton.StopClient();
-
-        panelSwapper.gameObject.SetActive(true);
-        gameObject.SetActive(true);
-        Debug.Log("Do hl. menu");
-        panelSwapper.SwapPanel("MainPanel");
+        if(panelSwapper != null)
+        {
+            panelSwapper.gameObject.SetActive(true);
+            gameObject.SetActive(true);
+            Debug.Log("Do hl. menu");
+            panelSwapper.SwapPanel("MainPanel");
+        }
     }
 
 

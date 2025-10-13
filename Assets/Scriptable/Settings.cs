@@ -19,4 +19,8 @@ public class Settings : ScriptableObject
     [Header("Audio Input")]
     public int micIndex = 0;
     public string micName = "";
+
+
+
+
 }
