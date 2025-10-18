@@ -2012,7 +2012,7 @@ MonoBehaviour:
   syncInterval: 0
   lobbyID: 0
   networkManager: {fileID: 1695253521}
-  menuComp: {fileID: 0}
+  menuComp: {fileID: 743742975}
   startup: 1
 --- !u!114 &550017304
 MonoBehaviour:

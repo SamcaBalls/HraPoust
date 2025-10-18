@@ -17,7 +17,7 @@ using UnityEngine.SceneManagement;
         }
         public ulong lobbyID;
         public NetworkManager networkManager;
-        [SerializeField] MenuComponents menuComp;    
+        public MenuComponents menuComp;    
         bool privateLobby = false;
 
         private Callback<LobbyCreated_t> lobbyCreated;
@@ -46,6 +46,7 @@ using UnityEngine.SceneManagement;
             return;
         }
 
+        RegisterCallbacks();
         // Připoj callback pro každé načtení scény
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -66,8 +67,6 @@ using UnityEngine.SceneManagement;
 
         // Tohle se ti spustí POKAŽDÉ po načtení scény
         menuComp = FindAnyObjectByType<MenuComponents>();
-
-        RegisterCallbacks();
 
 
         SetOnclicks();
@@ -91,12 +90,24 @@ using UnityEngine.SceneManagement;
     }
 
     void Start()
+    {
+        DontDestroyOnLoad(gameObject);
+        networkManager = FindAnyObjectByType<NetworkManager>();
+
+        // Manuální inicializace, protože sceneLoaded se nevolá při prvním načtení
+        InitializeMenu();
+
+        SteamAPI.RunCallbacks();
+    }
+
+    private void InitializeMenu()
+    {
+        if (SceneManager.GetActiveScene().name == "Menu")
         {
-            DontDestroyOnLoad(gameObject);
-            networkManager = FindAnyObjectByType<NetworkManager>();
-            
-            SteamAPI.RunCallbacks();
+            menuComp = FindAnyObjectByType<MenuComponents>();
+            SetOnclicks();
         }
+    }
 
 
     void RegisterCallbacks()
@@ -116,11 +127,15 @@ using UnityEngine.SceneManagement;
 
     public void HostLobby()
         {
-        if (string.IsNullOrWhiteSpace(menuComp.inputFieldHost.text) && privateLobby)
+        if(menuComp != null)
         {
-            menuComp.warningText.SetActive(true);
-            return;
+            if (string.IsNullOrWhiteSpace(menuComp.inputFieldHost.text) && privateLobby)
+            {
+                menuComp.warningText.SetActive(true);
+                return;
+            }
         }
+
 
 
         if (!SteamManager.Initialized)
@@ -133,7 +148,7 @@ using UnityEngine.SceneManagement;
                 return;
             }
 
-        menuComp.panelSwapper.SwapPanel("LobbyPanel");
+        if (menuComp != null) menuComp.panelSwapper.SwapPanel("LobbyPanel");
 
 
             SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 8);

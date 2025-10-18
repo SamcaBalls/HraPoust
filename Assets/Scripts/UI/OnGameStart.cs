@@ -31,9 +31,16 @@ public class LobbyStarter : MonoBehaviour
 
         while (!SteamManager.Initialized)
             yield return null;
+
+        while (steamLobby.menuComp == null)
+            yield return null;
+
+        Debug.Log("[LobbyStarter] menuComp připraveno, můžeme spustit HostLobby");
+
         if (steamLobby.lobbyID != 0)
             steamLobby.LeaveLobby();
 
+        
         steamLobby.startup = true;
         steamLobby.HostLobby();
     }
