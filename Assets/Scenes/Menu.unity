@@ -1966,15 +1966,9 @@ MonoBehaviour:
   syncDirection: 0
   syncMode: 0
   syncInterval: 0
-  hostButton: {fileID: 2037414846}
   lobbyID: 0
   networkManager: {fileID: 1695253521}
-  panelSwapper: {fileID: 580969831}
-  dropdown: {fileID: 981843537}
-  inputFieldHost: {fileID: 712015491}
-  inputFieldClient: {fileID: 2028068061}
-  passwordUI: {fileID: 1268316963}
-  warningText: {fileID: 1836341866}
+  menuComp: {fileID: 0}
 --- !u!114 &550017304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2005,7 +1999,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1695253520}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &580969830
 GameObject:
@@ -2710,7 +2704,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &742915704
 Transform:
   m_ObjectHideFlags: 0
@@ -2754,6 +2748,56 @@ MonoBehaviour:
   fadeGroup: {fileID: 742915705}
   fadeDuration: 1
   image: {fileID: 520828754}
+--- !u!1 &743742973
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 743742974}
+  - component: {fileID: 743742975}
+  m_Layer: 0
+  m_Name: MenuComponents
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &743742974
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743742973}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.775799, y: 10.331361, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &743742975
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 743742973}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 106cdd36310d72d41bd41e34c7c26a68, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  panelSwapper: {fileID: 580969831}
+  dropdown: {fileID: 981843537}
+  inputFieldHost: {fileID: 712015491}
+  inputFieldClient: {fileID: 2028068061}
+  passwordUI: {fileID: 1268316963}
+  warningText: {fileID: 1836341866}
 --- !u!1 &744636273
 GameObject:
   m_ObjectHideFlags: 0
@@ -6542,8 +6586,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 550017305}
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1695253521
@@ -8812,6 +8855,8 @@ SceneRoots:
   - {fileID: 1915258743}
   - {fileID: 580969832}
   - {fileID: 1695253520}
+  - {fileID: 550017305}
   - {fileID: 329275739}
   - {fileID: 1720153658}
   - {fileID: 19395838}
+  - {fileID: 743742974}

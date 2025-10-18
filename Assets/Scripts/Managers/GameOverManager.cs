@@ -6,7 +6,6 @@ public class GameOverManager : MonoBehaviour
 {
     [SerializeField] Blackscreen blackscreen;
     [SerializeField] ReturnToLobbyManager returnToLobbyManager;
-    SteamLobby steamLobby;
 
     void Start()
     {

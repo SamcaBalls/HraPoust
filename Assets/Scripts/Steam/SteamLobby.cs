@@ -4,6 +4,7 @@ using UnityEngine;
 using Mirror;
 using Steamworks;
 using TMPro;
+using UnityEngine.SceneManagement;
 
     public class SteamLobby : NetworkBehaviour
     {
@@ -14,15 +15,9 @@ using TMPro;
                 return instance;
             } 
         }
-        public GameObject hostButton = null;
         public ulong lobbyID;
         public NetworkManager networkManager;
-        public PanelSwapper panelSwapper;
-        [SerializeField] TMP_Dropdown dropdown;
-        [SerializeField] TMP_InputField inputFieldHost;
-        [SerializeField] TMP_InputField inputFieldClient;
-        [SerializeField] PasswordUI passwordUI;
-        [SerializeField] GameObject warningText;
+        [SerializeField] MenuComponents menuComp;    
         bool privateLobby = false;
 
         private Callback<LobbyCreated_t> lobbyCreated;
@@ -39,22 +34,52 @@ using TMPro;
         bool startup = true;
 
 
+
+
     void Awake()
+    {
+        if (instance == null)
+            instance = this;
+        else if (Instance != this)
         {
-            if (instance == null)
-                instance = this;
-            else if (Instance != this)
-            {
-                Destroy(gameObject);
-                return;
-            }
+            Destroy(gameObject);
+            return;
         }
 
-        void Start()
+        DontDestroyOnLoad(gameObject);
+
+        // Připoj callback pro každé načtení scény
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+
+    void OnDestroy()
+    {
+        // Odpoj event, aby nezůstal viset
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Menu")) return;
+        
+        Debug.Log($"Nová scéna načtena: {scene.name}");
+
+        // Tohle se ti spustí POKAŽDÉ po načtení scény
+        menuComp = FindAnyObjectByType<MenuComponents>();
+        LobbyStarter lobbyStarter = FindAnyObjectByType<LobbyStarter>();
+
+        if (lobbyStarter != null)
+            lobbyStarter.CoroutineStart();
+
+        // můžeš tu taky znovu přesunout objekt zpět do aktuální scény, pokud chceš:
+        SceneManager.MoveGameObjectToScene(gameObject, scene);
+    }
+
+    void Start()
         {
-            networkManager = GetComponentInParent<NetworkManager>();
+            DontDestroyOnLoad(gameObject);
+            networkManager = FindAnyObjectByType<NetworkManager>();
             
-            panelSwapper.gameObject.SetActive(true);
             SteamAPI.RunCallbacks();
         }
 
@@ -75,9 +100,9 @@ using TMPro;
 
         public void HostLobby()
         {
-        if (string.IsNullOrWhiteSpace(inputFieldHost.text) && privateLobby)
+        if (string.IsNullOrWhiteSpace(menuComp.inputFieldHost.text) && privateLobby)
         {
-            warningText.SetActive(true);
+            menuComp.warningText.SetActive(true);
             return;
         }
 
@@ -92,7 +117,7 @@ using TMPro;
                 return;
             }
 
-            panelSwapper.SwapPanel("LobbyPanel");
+        menuComp.panelSwapper.SwapPanel("LobbyPanel");
 
             RegisterCallbacks();
 
@@ -139,15 +164,15 @@ using TMPro;
 
             // uložíme jestli má lobby heslo
             SteamMatchmaking.SetLobbyData(lobby, "private", privateLobby ? "true" : "false");
-            SteamMatchmaking.SetLobbyData(lobby, "password", privateLobby ? inputFieldHost.text : "");
+            SteamMatchmaking.SetLobbyData(lobby, "password", privateLobby ? menuComp.inputFieldHost.text : "");
 
             networkManager.StartHost();
 
             // reset flagu pro jistotu
             privateLobby = false;
-            dropdown.value = 0;
-            inputFieldHost.text = "";
-            warningText.SetActive(false);
+        menuComp.dropdown.value = 0;
+        menuComp.inputFieldHost.text = "";
+        menuComp.warningText.SetActive(false);
     }
 
 
@@ -188,7 +213,7 @@ using TMPro;
             Debug.Log("Vstoupil jsem do lobby: " + lobbyID);
 
             networkManager.StartClient();
-            panelSwapper.SwapPanel("LobbyPanel");
+        menuComp.panelSwapper.SwapPanel("LobbyPanel");
         }
 
         void OnLobbyChatUpdate(LobbyChatUpdate_t callback)
@@ -239,9 +264,9 @@ using TMPro;
             else if (NetworkClient.isConnected)
                 NetworkManager.singleton.StopClient();
 
-            panelSwapper.gameObject.SetActive(true);
+        menuComp.panelSwapper.gameObject.SetActive(true);
             this.gameObject.SetActive(true);
-            panelSwapper.SwapPanel("MainPanel");
+        menuComp.panelSwapper.SwapPanel("MainPanel");
         }
 
     public void CloseLobby()
@@ -270,12 +295,12 @@ using TMPro;
             NetworkManager.singleton.StopHost();
         else if (NetworkClient.isConnected)
             NetworkManager.singleton.StopClient();
-        if(panelSwapper != null)
+        if(menuComp != null)
         {
-            panelSwapper.gameObject.SetActive(true);
+            menuComp.panelSwapper.gameObject.SetActive(true);
             gameObject.SetActive(true);
             Debug.Log("Do hl. menu");
-            panelSwapper.SwapPanel("MainPanel");
+            menuComp.panelSwapper.SwapPanel("MainPanel");
         }
     }
 
@@ -283,9 +308,9 @@ using TMPro;
 
     public void OnDropdownChange()
         {
-            privateLobby = dropdown.value == 1;
+            privateLobby = menuComp.dropdown.value == 1;
             Debug.Log("PrivateLobby: " + privateLobby);
-            inputFieldHost.interactable = privateLobby;
+        menuComp.inputFieldHost.interactable = privateLobby;
         }
 
         public void JoinLobby(CSteamID targetLobbyID)
@@ -294,11 +319,11 @@ using TMPro;
 
             if (!string.IsNullOrEmpty(password))
             {
-                if(inputFieldClient.text != password)
+                if(menuComp.inputFieldClient.text != password)
                 {
                     Debug.Log("Lobby má heslo → otevírám PasswordPanel");
-                    passwordUI.SetLobbyInfo(targetLobbyID);
-                    panelSwapper.SwapPanel("PasswordEnterPanel");
+                menuComp.passwordUI.SetLobbyInfo(targetLobbyID);
+                menuComp.panelSwapper.SwapPanel("PasswordEnterPanel");
                 }
                 else
                 {

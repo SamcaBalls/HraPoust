@@ -9,22 +9,16 @@ public class LobbyStarter : MonoBehaviour
 
     void Awake()
     {
-        DontDestroyOnLoad(gameObject); // Zůstane mezi scénami
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        DontDestroyOnLoad(gameObject);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+
     }
 
-    void OnDestroy()
+    public void CoroutineStart()
     {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
-
-    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
-    {
-        if (scene.name == "Menu")
-        {
-            Debug.Log("[LobbyStarter] Menu načteno, startuji lobby...");
-            StartCoroutine(StartLobbyRoutine());
-        }
+        StartCoroutine(StartLobbyRoutine());
+        Debug.Log("[LobbyStarter] Started coroutine");
     }
 
     private IEnumerator StartLobbyRoutine()

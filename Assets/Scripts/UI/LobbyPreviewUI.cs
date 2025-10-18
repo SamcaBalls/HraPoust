@@ -6,7 +6,7 @@ using TMPro;
     public class LobbyPreviewUI : MonoBehaviour
     {
     public TMP_Text lobbyNameText;
-    private CSteamID lobbyID;
+    public CSteamID lobbyID;
 
     [SerializeField]
     private GameObject privateImage;
