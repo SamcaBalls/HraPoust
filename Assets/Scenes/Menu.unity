@@ -607,6 +607,50 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 89068851}
   m_CullTransparentMesh: 1
+--- !u!1 &116235542
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 116235544}
+  - component: {fileID: 116235543}
+  m_Layer: 0
+  m_Name: Cursor
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &116235543
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116235542}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: df68ada7762bb644b9b0185884a3a4a3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &116235544
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 116235542}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.775799, y: 10.331361, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &150978308
 GameObject:
   m_ObjectHideFlags: 0
@@ -2798,6 +2842,7 @@ MonoBehaviour:
   inputFieldClient: {fileID: 2028068061}
   passwordUI: {fileID: 1268316963}
   warningText: {fileID: 1836341866}
+  hostButton: {fileID: 1452145592}
 --- !u!1 &744636273
 GameObject:
   m_ObjectHideFlags: 0
@@ -5370,19 +5415,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1452145593}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 550017303}
-        m_TargetAssemblyTypeName: SteamLobbyTutorial.SteamLobby, Assembly-CSharp
-        m_MethodName: HostLobby
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1452145593
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8860,3 +8893,4 @@ SceneRoots:
   - {fileID: 1720153658}
   - {fileID: 19395838}
   - {fileID: 743742974}
+  - {fileID: 116235544}

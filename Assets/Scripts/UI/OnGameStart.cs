@@ -10,9 +10,6 @@ public class LobbyStarter : MonoBehaviour
     void Awake()
     {
         DontDestroyOnLoad(gameObject);
-        Cursor.lockState = CursorLockMode.None;
-        Cursor.visible = true;
-
     }
 
     public void CoroutineStart()
@@ -50,5 +47,6 @@ public class LobbyStarter : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         steamLobby.CloseLobby();
         yield return StartCoroutine(blackscreen.FadeRoutine(false));
+        Destroy(gameObject);
     }
 }

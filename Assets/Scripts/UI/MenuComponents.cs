@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MenuComponents : MonoBehaviour
 {
@@ -9,4 +10,5 @@ public class MenuComponents : MonoBehaviour
     public TMP_InputField inputFieldClient;
     public PasswordUI passwordUI;
     public GameObject warningText;
+    public Button hostButton;
 }

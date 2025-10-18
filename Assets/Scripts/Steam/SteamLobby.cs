@@ -46,8 +46,6 @@ using UnityEngine.SceneManagement;
             return;
         }
 
-        DontDestroyOnLoad(gameObject);
-
         // Připoj callback pro každé načtení scény
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -61,7 +59,9 @@ using UnityEngine.SceneManagement;
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (SceneManager.GetActiveScene() != SceneManager.GetSceneByName("Menu")) return;
-        
+
+        SceneManager.MoveGameObjectToScene(gameObject, scene);
+
         Debug.Log($"Nová scéna načtena: {scene.name}");
 
         // Tohle se ti spustí POKAŽDÉ po načtení scény
@@ -71,8 +71,17 @@ using UnityEngine.SceneManagement;
         if (lobbyStarter != null)
             lobbyStarter.CoroutineStart();
 
-        // můžeš tu taky znovu přesunout objekt zpět do aktuální scény, pokud chceš:
-        SceneManager.MoveGameObjectToScene(gameObject, scene);
+        SetOnclicks();
+
+    }
+
+    void SetOnclicks()
+    {
+        if(menuComp != null)
+        {
+            menuComp.hostButton.onClick.AddListener(HostLobby);
+            Debug.Log("Added listeners");
+        }
     }
 
     void Start()
