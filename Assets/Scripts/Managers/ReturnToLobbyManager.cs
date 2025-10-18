@@ -48,6 +48,7 @@ public class ReturnToLobbyManager : NetworkBehaviour
         networkM.playerPrefab = prefab;
         // Až potom načti Menu
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
+        Destroy(gameObject);
     }
 
 

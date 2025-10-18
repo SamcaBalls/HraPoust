@@ -31,7 +31,7 @@ using UnityEngine.SceneManagement;
 
         public event System.Action OnLobbyReady;
 
-        bool startup = true;
+        public bool startup = true;
 
 
 
@@ -66,7 +66,9 @@ using UnityEngine.SceneManagement;
 
         // Tohle se ti spustí POKAŽDÉ po načtení scény
         menuComp = FindAnyObjectByType<MenuComponents>();
-       
+
+        RegisterCallbacks();
+
 
         SetOnclicks();
 
@@ -96,21 +98,22 @@ using UnityEngine.SceneManagement;
         }
 
 
-        void RegisterCallbacks()
-        {
-            if (callbacksRegistered)
-                return;
+    void RegisterCallbacks()
+    {
+        if (callbacksRegistered)
+            return; // už registrováno
 
-            lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
-            gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
-            lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
-            lobbyChatUpdate = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
+        lobbyCreated = Callback<LobbyCreated_t>.Create(OnLobbyCreated);
+        gameLobbyJoinRequested = Callback<GameLobbyJoinRequested_t>.Create(OnGameLobbyJoinRequested);
+        lobbyEntered = Callback<LobbyEnter_t>.Create(OnLobbyEntered);
+        lobbyChatUpdate = Callback<LobbyChatUpdate_t>.Create(OnLobbyChatUpdate);
 
-            callbacksRegistered = true;
-            Debug.Log("Steam callbacky registrované");
-        }
+        callbacksRegistered = true;
+        Debug.Log("Steam callbacky registrované");
+    }
 
-        public void HostLobby()
+
+    public void HostLobby()
         {
         if (string.IsNullOrWhiteSpace(menuComp.inputFieldHost.text) && privateLobby)
         {
@@ -131,7 +134,6 @@ using UnityEngine.SceneManagement;
 
         menuComp.panelSwapper.SwapPanel("LobbyPanel");
 
-            RegisterCallbacks();
 
             SteamMatchmaking.CreateLobby(ELobbyType.k_ELobbyTypePublic, 8);
 
@@ -146,7 +148,6 @@ using UnityEngine.SceneManagement;
                 yield return null;
 
             Debug.Log("Steam inicializován, registruji callbacky a vytvářím lobby");
-            RegisterCallbacks();
 
             HostLobby();
         }
@@ -271,14 +272,26 @@ using UnityEngine.SceneManagement;
                 lobbyID = 0;
             }
 
-            if (NetworkServer.active && currentOwner == me)
+        if (NetworkClient.isConnected)
+        {
+            networkManager.StopClient();
+            Debug.Log("Stopped Client");
+        }
+
+        if (NetworkServer.active)
+        {
+            networkManager.StopHost();
+            Debug.Log("Stopped Host");
+        }
+
+        if (NetworkServer.active && currentOwner == me)
                 NetworkManager.singleton.StopHost();
             else if (NetworkClient.isConnected)
                 NetworkManager.singleton.StopClient();
 
-        menuComp.panelSwapper.gameObject.SetActive(true);
+            menuComp.panelSwapper.gameObject.SetActive(true);
             this.gameObject.SetActive(true);
-        menuComp.panelSwapper.SwapPanel("MainPanel");
+            menuComp.panelSwapper.SwapPanel("MainPanel");
         }
 
     public void CloseLobby()
@@ -339,7 +352,6 @@ using UnityEngine.SceneManagement;
                 }
                 else
                 {
-                    RegisterCallbacks();
                     SteamMatchmaking.JoinLobby(targetLobbyID);
                 }
 

@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 public class IntroManager : MonoBehaviour
 {
     [SerializeField] Blackscreen blackscreen;
-    [SerializeField] ReturnToLobbyManager returnToLobbyManager;
 
     void Start()
     {
@@ -17,7 +16,7 @@ public class IntroManager : MonoBehaviour
         yield return blackscreen.FadeRoutine(false);
         yield return new WaitForSeconds(1);
         yield return blackscreen.FadeRoutine(true);
-        returnToLobbyManager.SendToLobby();
+        SceneManager.LoadScene("Menu");
     }
 
 }

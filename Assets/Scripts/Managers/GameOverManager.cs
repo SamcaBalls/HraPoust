@@ -15,7 +15,7 @@ public class GameOverManager : MonoBehaviour
     IEnumerator FadeSequence()
     {
         yield return blackscreen.FadeRoutine(false);
-        yield return new WaitForSeconds(5);
+        yield return new WaitForSeconds(1);
         yield return blackscreen.FadeRoutine(true);
         returnToLobbyManager.SendToLobby();
     }

@@ -43,7 +43,8 @@ public class LobbyBrowser : MonoBehaviour
     {
         if (menuComp != null)
         {
-            menuComp.hostButton.onClick.AddListener(RefreshLobbies);
+            menuComp.joinButton.onClick.AddListener(RefreshLobbies);
+            menuComp.refreshButton.onClick.AddListener(RefreshLobbies);
 
             Debug.Log("Added listeners");
         }
