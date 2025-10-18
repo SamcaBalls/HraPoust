@@ -2013,6 +2013,7 @@ MonoBehaviour:
   lobbyID: 0
   networkManager: {fileID: 1695253521}
   menuComp: {fileID: 0}
+  startup: 1
 --- !u!114 &550017304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2845,6 +2846,7 @@ MonoBehaviour:
   hostButton: {fileID: 1452145592}
   joinButton: {fileID: 1373627705}
   refreshButton: {fileID: 1688162064}
+  returnLobbyButton: {fileID: 1037742653}
 --- !u!1 &744636273
 GameObject:
   m_ObjectHideFlags: 0

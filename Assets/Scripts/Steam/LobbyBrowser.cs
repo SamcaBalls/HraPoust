@@ -39,6 +39,13 @@ public class LobbyBrowser : MonoBehaviour
         lobbyDataUpdateCallback = Callback<LobbyDataUpdate_t>.Create(OnLobbyDataUpdate);
     }
 
+    void OnDestroy()
+    {
+        if (lobbyListCallback != null) lobbyListCallback.Dispose();
+        if (lobbyDataUpdateCallback != null) lobbyDataUpdateCallback.Dispose();
+    }
+
+
     public void SetOnclicks()
     {
         if (menuComp != null)

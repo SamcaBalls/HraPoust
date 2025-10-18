@@ -79,6 +79,7 @@ using UnityEngine.SceneManagement;
         if (menuComp != null)
         {
             menuComp.hostButton.onClick.AddListener(HostLobby);
+            menuComp.returnLobbyButton.onClick.AddListener(LeaveLobby);
 
             var browser = FindAnyObjectByType<LobbyBrowser>();
             if (browser != null)
