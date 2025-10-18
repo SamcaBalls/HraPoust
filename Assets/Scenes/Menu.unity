@@ -840,8 +840,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1495771617}
   m_HandleRect: {fileID: 1495771616}
   m_Direction: 0
-  m_Value: NaN
-  m_Size: 0
+  m_Value: 0
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5802,8 +5802,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1269602678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: NaN, y: 0}
-  m_AnchorMax: {x: NaN, y: 1}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: NaN, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5878,7 +5878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: NaN, y: NaN}
+  m_AnchoredPosition: {x: -261.6305, y: 133.25937}
   m_SizeDelta: {x: 506, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1520350682
@@ -7413,8 +7413,8 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 936299409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: NaN}
-  m_AnchorMax: {x: 1, y: NaN}
+  m_AnchorMin: {x: 0, y: 0.11159992}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: NaN}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -7977,6 +7977,7 @@ MonoBehaviour:
   contentParent: {fileID: 1520350681}
   lobbyPreviewPrefab: {fileID: 3660838802530135904, guid: 576332d7d3526ad4e8daf1a0258a3651, type: 3}
   loadingText: {fileID: 1462391448}
+  menuComp: {fileID: 743742975}
 --- !u!4 &1992566015
 Transform:
   m_ObjectHideFlags: 0
@@ -8732,8 +8733,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1879851694}
   m_HandleRect: {fileID: 1879851693}
   m_Direction: 2
-  m_Value: NaN
-  m_Size: 0
+  m_Value: 1.0000192
+  m_Size: 0.8884001
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
