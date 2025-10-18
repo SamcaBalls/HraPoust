@@ -66,10 +66,7 @@ using UnityEngine.SceneManagement;
 
         // Tohle se ti spustí POKAŽDÉ po načtení scény
         menuComp = FindAnyObjectByType<MenuComponents>();
-        LobbyStarter lobbyStarter = FindAnyObjectByType<LobbyStarter>();
-
-        if (lobbyStarter != null)
-            lobbyStarter.CoroutineStart();
+       
 
         SetOnclicks();
 
@@ -77,9 +74,15 @@ using UnityEngine.SceneManagement;
 
     void SetOnclicks()
     {
-        if(menuComp != null)
+        if (menuComp != null)
         {
             menuComp.hostButton.onClick.AddListener(HostLobby);
+
+            var browser = FindAnyObjectByType<LobbyBrowser>();
+            if (browser != null)
+            {
+                browser.SetOnclicks();
+            }
             Debug.Log("Added listeners");
         }
     }

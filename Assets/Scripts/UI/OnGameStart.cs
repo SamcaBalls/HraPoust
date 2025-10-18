@@ -7,9 +7,10 @@ public class LobbyStarter : MonoBehaviour
     [SerializeField] private Blackscreen blackscreen;
     private SteamLobby steamLobby;
 
-    void Awake()
+
+    private void Start()
     {
-        DontDestroyOnLoad(gameObject);
+        CoroutineStart();
     }
 
     public void CoroutineStart()
@@ -22,7 +23,7 @@ public class LobbyStarter : MonoBehaviour
     {
         while (steamLobby == null)
         {
-            steamLobby = FindAnyObjectByType<SteamLobby>();
+            steamLobby = FindAnyObjectByType<SteamLobby>(FindObjectsInactive.Include);
             yield return null;
         }
 

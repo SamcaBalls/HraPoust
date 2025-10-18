@@ -840,8 +840,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1495771617}
   m_HandleRect: {fileID: 1495771616}
   m_Direction: 0
-  m_Value: 0.5676215
-  m_Size: 0.99303967
+  m_Value: NaN
+  m_Size: 0
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -1404,7 +1404,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 523.478, y: 251.321}
+  m_SizeDelta: {x: 544.261, y: 287.52}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &291231637
 MonoBehaviour:
@@ -2843,6 +2843,8 @@ MonoBehaviour:
   passwordUI: {fileID: 1268316963}
   warningText: {fileID: 1836341866}
   hostButton: {fileID: 1452145592}
+  joinButton: {fileID: 0}
+  refreshButton: {fileID: 0}
 --- !u!1 &744636273
 GameObject:
   m_ObjectHideFlags: 0
@@ -5283,7 +5285,7 @@ MonoBehaviour:
           m_StringArgument: JoinPanel
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 1695253526}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LobbyBrowser, Assembly-CSharp
         m_MethodName: RefreshLobbies
         m_Mode: 1
@@ -5800,9 +5802,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1269602678}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.0039508347, y: 0}
-  m_AnchorMax: {x: 0.9969905, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: NaN, y: 0}
+  m_AnchorMax: {x: NaN, y: 1}
+  m_AnchoredPosition: {x: NaN, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1495771617
@@ -5876,7 +5878,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -253.23816, y: 150}
+  m_AnchoredPosition: {x: NaN, y: NaN}
   m_SizeDelta: {x: 506, y: 300}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &1520350682
@@ -6537,7 +6539,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1695253526}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: LobbyBrowser, Assembly-CSharp
         m_MethodName: RefreshLobbies
         m_Mode: 1
@@ -6599,7 +6601,6 @@ GameObject:
   - component: {fileID: 1695253524}
   - component: {fileID: 1695253523}
   - component: {fileID: 1695253521}
-  - component: {fileID: 1695253526}
   m_Layer: 0
   m_Name: NetworkManager
   m_TagString: Untagged
@@ -6697,21 +6698,6 @@ MonoBehaviour:
   Timeout: 25
   AllowSteamRelay: 1
   UseNextGenSteamNetworking: 1
---- !u!114 &1695253526
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1695253517}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9e4077c36da1fd2428ce0a060acdcebd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  contentParent: {fileID: 1520350681}
-  lobbyPreviewPrefab: {fileID: 3660838802530135904, guid: 576332d7d3526ad4e8daf1a0258a3651, type: 3}
-  loadingText: {fileID: 1462391448}
 --- !u!1 &1706664698
 GameObject:
   m_ObjectHideFlags: 0
@@ -7427,9 +7413,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 936299409}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0.11613169}
-  m_AnchorMax: {x: 1, y: 0.88386834}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: NaN}
+  m_AnchorMax: {x: 1, y: NaN}
+  m_AnchoredPosition: {x: 0, y: NaN}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1879851694
@@ -7959,6 +7945,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1977432976}
   m_CullTransparentMesh: 1
+--- !u!1 &1992566013
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1992566015}
+  - component: {fileID: 1992566014}
+  m_Layer: 0
+  m_Name: LobbyBrowser
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1992566014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992566013}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9e4077c36da1fd2428ce0a060acdcebd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contentParent: {fileID: 1520350681}
+  lobbyPreviewPrefab: {fileID: 3660838802530135904, guid: 576332d7d3526ad4e8daf1a0258a3651, type: 3}
+  loadingText: {fileID: 1462391448}
+--- !u!4 &1992566015
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1992566013}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -9.775799, y: 10.331361, z: 90}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1996037791
 GameObject:
   m_ObjectHideFlags: 0
@@ -8699,8 +8732,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1879851694}
   m_HandleRect: {fileID: 1879851693}
   m_Direction: 2
-  m_Value: 0.49999988
-  m_Size: 0.7677367
+  m_Value: NaN
+  m_Size: 0
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -8894,3 +8927,4 @@ SceneRoots:
   - {fileID: 19395838}
   - {fileID: 743742974}
   - {fileID: 116235544}
+  - {fileID: 1992566015}

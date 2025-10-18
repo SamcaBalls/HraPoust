@@ -5,7 +5,7 @@ using Mirror;
 
 public class ReturnToLobbyManager : NetworkBehaviour
 {
-
+    [SerializeField] GameObject prefab;
     public void SendToLobby()
     {
         DontDestroyOnLoad(gameObject);
@@ -14,34 +14,41 @@ public class ReturnToLobbyManager : NetworkBehaviour
 
     private IEnumerator GoToLobby()
     {
-
-
-        // Počkej chvíli, aby se dokončily případné network operace
         yield return new WaitForSeconds(0.5f);
 
-        // Zavři aktuální lobby (nebo nic neudělá, pokud žádné není)
+
+        Debug.Log("Jdu na vypnutí");
         var steamLobby = FindAnyObjectByType<SteamLobby>();
         if (steamLobby != null && steamLobby.lobbyID != 0)
-        {
             steamLobby.CloseLobby();
-        }
 
-        var netwokM = FindAnyObjectByType<CustomNetworkManager>();
-        if (netwokM != null)
+        var networkM = FindAnyObjectByType<CustomNetworkManager>();
+        if (networkM != null)
         {
-            if (isClient)
+            if (NetworkClient.isConnected)
             {
-                netwokM.StopClient();
+                Debug.Log("Stopping Client...");
+                networkM.StopClient();
+                Debug.Log("Stopped Client");
             }
-            if (isServer)
+
+            if (NetworkServer.active)
             {
-                netwokM.StopHost();
-            }            
+                Debug.Log("Stopping Host...");
+                networkM.StopHost();
+                Debug.Log("Stopped Host");
+            }
+
+            // 🕓 Počkej dokud se síť úplně nevypne
+            yield return new WaitUntil(() =>
+                !NetworkClient.isConnected && !NetworkServer.active);
         }
 
-
-        // Načti Menu scénu
+        networkM.onlineScene = null;
+        networkM.playerPrefab = prefab;
+        // Až potom načti Menu
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
     }
+
 
 }
