@@ -53,9 +53,16 @@ using UnityEngine.SceneManagement;
 
     void OnDestroy()
     {
-        // Odpoj event, aby nezůstal viset
         SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        if (lobbyCreated != null) lobbyCreated.Dispose();
+        if (gameLobbyJoinRequested != null) gameLobbyJoinRequested.Dispose();
+        if (lobbyEntered != null) lobbyEntered.Dispose();
+        if (lobbyChatUpdate != null) lobbyChatUpdate.Dispose();
+
+        callbacksRegistered = false;
     }
+
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -196,12 +203,14 @@ using UnityEngine.SceneManagement;
             SteamMatchmaking.SetLobbyData(lobby, "password", privateLobby ? menuComp.inputFieldHost.text : "");
 
             networkManager.StartHost();
-
+        if (menuComp != null)
+        {
             // reset flagu pro jistotu
             privateLobby = false;
-        menuComp.dropdown.value = 0;
-        menuComp.inputFieldHost.text = "";
-        menuComp.warningText.SetActive(false);
+            menuComp.dropdown.value = 0;
+            menuComp.inputFieldHost.text = "";
+            menuComp.warningText.SetActive(false);
+        }
     }
 
 
