@@ -33,6 +33,8 @@ using UnityEngine.SceneManagement;
 
         public bool startup = true;
 
+        bool sceneLoadedSubscribed = false;
+
 
 
 
@@ -46,9 +48,14 @@ using UnityEngine.SceneManagement;
             return;
         }
 
-        RegisterCallbacks();
-        // Připoj callback pro každé načtení scény
-        SceneManager.sceneLoaded += OnSceneLoaded;
+        if (!callbacksRegistered)
+            RegisterCallbacks();
+
+        if (!sceneLoadedSubscribed)
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+            sceneLoadedSubscribed = true;
+        }
     }
 
     void OnDestroy()
@@ -84,17 +91,20 @@ using UnityEngine.SceneManagement;
     {
         if (menuComp != null)
         {
+            menuComp.hostButton.onClick.RemoveAllListeners();
+            menuComp.returnLobbyButton.onClick.RemoveAllListeners();
+
             menuComp.hostButton.onClick.AddListener(HostLobby);
             menuComp.returnLobbyButton.onClick.AddListener(LeaveLobby);
 
             var browser = FindAnyObjectByType<LobbyBrowser>();
             if (browser != null)
-            {
                 browser.SetOnclicks();
-            }
+
             Debug.Log("Added listeners");
         }
     }
+
 
     void Start()
     {

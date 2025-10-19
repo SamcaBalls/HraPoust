@@ -50,6 +50,10 @@ public class LobbyBrowser : MonoBehaviour
     {
         if (menuComp != null)
         {
+            menuComp.joinButton.onClick.RemoveAllListeners();
+            menuComp.refreshButton.onClick.RemoveAllListeners();
+
+
             menuComp.joinButton.onClick.AddListener(RefreshLobbies);
             menuComp.refreshButton.onClick.AddListener(RefreshLobbies);
 

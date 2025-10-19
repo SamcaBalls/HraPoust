@@ -20,12 +20,22 @@ public class CustomNetworkManager : NetworkManager
     /// Runs on both Server and Client
     /// Networking is NOT initialized when this fires
     /// </summary>
+    public static CustomNetworkManager instance;
+
     public override void Awake()
     {
-        base.Awake();
+        if (instance != null && instance != this)
+        {
+            Destroy(gameObject); // zniè duplikát
+            return;
+        }
+        instance = this;
+        DontDestroyOnLoad(gameObject);
 
+        base.Awake();
         GetComponent<SteamManager>().enabled = true;
     }
+
 
     #region Unity Callbacks
 
