@@ -17,10 +17,7 @@ public class ReturnToLobbyManager : NetworkBehaviour
         yield return new WaitForSeconds(0.5f);
 
 
-        Debug.Log("Jdu na vypnutí");
-        var steamLobby = FindAnyObjectByType<SteamLobby>();
-        if (steamLobby != null && steamLobby.lobbyID != 0)
-            steamLobby.CloseLobby();
+       
 
         var networkM = FindAnyObjectByType<CustomNetworkManager>();
         if (networkM != null)

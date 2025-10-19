@@ -134,4 +134,23 @@ using Steamworks;
             UpdatePlayerLobbyUI();
         }
 
+    public void ClearLobbyPlayers()
+    {
+        // Vyèistí seznam UI a handlerù
+        foreach (Transform child in playerListParent)
+        {
+            TextMeshProUGUI txt = child.GetChild(0).GetComponent<TextMeshProUGUI>();
+            txt.text = ""; // vymaže jméno
+            PlayerLobbyHandler handler = child.GetComponent<PlayerLobbyHandler>();
+            if (handler != null)
+                handler.isReady = false; // reset stavu pøipravenosti
+        }
+
+        playerNameTexts.Clear();
+        playerLobbyHandlers.Clear();
+        playGameButton.interactable = false;
+
+        Debug.Log("[LobbyUIManager] Player UI cleared");
     }
+
+}

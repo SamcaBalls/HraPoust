@@ -15,6 +15,10 @@ public class LobbyStarter : MonoBehaviour
 
     public void CoroutineStart()
     {
+        if(steamLobby != null && steamLobby.lobbyID != 0)
+        {
+            steamLobby.CloseLobby();
+        }
         StartCoroutine(StartLobbyRoutine());
         Debug.Log("[LobbyStarter] Started coroutine");
     }

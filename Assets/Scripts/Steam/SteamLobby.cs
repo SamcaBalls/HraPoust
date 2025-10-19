@@ -332,36 +332,40 @@ using UnityEngine.SceneManagement;
 
     public void CloseLobby()
     {
-        if (lobbyID == 0)
-            return;
-        Debug.Log("Funguje");
-        var lobby = new CSteamID(lobbyID);
-        CSteamID owner = SteamMatchmaking.GetLobbyOwner(lobby);
-
-        // Zkontroluj, jestli jsem host
-        if (owner == SteamUser.GetSteamID())
+        if (lobbyID != 0)
         {
-            // Uzavřu lobby (už nebude joinable)
-            SteamMatchmaking.SetLobbyJoinable(lobby, false);
-            SteamMatchmaking.SetLobbyData(lobby, "closed", "true");
-            Debug.Log("Lobby uzavřena (SetLobbyJoinable false)");
-        }
+            var lobby = new CSteamID(lobbyID);
+            CSteamID owner = SteamMatchmaking.GetLobbyOwner(lobby);
 
-        // Odejdu normálně
-        SteamMatchmaking.LeaveLobby(lobby);
-        lobbyID = 0;
+            // Pokud jsem host, uzavři lobby pro join
+            if (owner == SteamUser.GetSteamID())
+            {
+                SteamMatchmaking.SetLobbyJoinable(lobby, false);
+                SteamMatchmaking.SetLobbyData(lobby, "closed", "true");
+            }
 
-        // Ukončím síťovou část
-        if (NetworkServer.active && owner == SteamUser.GetSteamID())
-            NetworkManager.singleton.StopHost();
-        else if (NetworkClient.isConnected)
-            NetworkManager.singleton.StopClient();
-        if(menuComp != null)
-        {
-            menuComp.panelSwapper.gameObject.SetActive(true);
-            gameObject.SetActive(true);
-            Debug.Log("Do hl. menu");
-            menuComp.panelSwapper.SwapPanel("MainPanel");
+            // Odejdeme z lobby
+            SteamMatchmaking.LeaveLobby(lobby);
+            lobbyID = 0;
+
+            // Stop network
+            if (NetworkServer.active && owner == SteamUser.GetSteamID())
+                networkManager.StopHost();
+            else if (NetworkClient.isConnected)
+                networkManager.StopClient();
+
+            // Vyčistit UI hráčů
+            LobbyUIManager.Instance?.ClearLobbyPlayers();
+
+            // Hard reset callbacků
+            HardReset();
+            Debug.Log("Zajebal jsem to");
+            if (menuComp != null)
+            {
+                menuComp.panelSwapper.gameObject.SetActive(true);
+                gameObject.SetActive(true);
+                menuComp.panelSwapper.SwapPanel("MainPanel");
+            }
         }
     }
 
@@ -399,4 +403,24 @@ using UnityEngine.SceneManagement;
             }
         }
 
+    public void HardReset()
+    {
+        // Odregistrovat všechny callbacky
+        if (lobbyCreated != null) { lobbyCreated.Dispose(); lobbyCreated = null; }
+        if (gameLobbyJoinRequested != null) { gameLobbyJoinRequested.Dispose(); gameLobbyJoinRequested = null; }
+        if (lobbyEntered != null) { lobbyEntered.Dispose(); lobbyEntered = null; }
+        if (lobbyChatUpdate != null) { lobbyChatUpdate.Dispose(); lobbyChatUpdate = null; }
+
+        callbacksRegistered = false;
+        lobbyID = 0;
+        startup = true;
+        waitingForSteam = false;
+
+        // Znovu registrovat callbacky pro nové lobby
+        RegisterCallbacks();
+
+        Debug.Log("[SteamLobby] Hard reset hotov");
     }
+
+
+}
