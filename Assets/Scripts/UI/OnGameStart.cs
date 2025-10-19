@@ -28,6 +28,9 @@ public class LobbyStarter : MonoBehaviour
         }
         steamLobby.gameObject.SetActive(true);
         steamLobby.OnLobbyReady += HandleLobbyReady;
+        Debug.Log("[LobbyStarter] Připojil jsem se na OnLobbyReady");
+
+
 
         while (!SteamManager.Initialized)
             yield return null;

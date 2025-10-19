@@ -61,6 +61,7 @@ using UnityEngine.SceneManagement;
     void OnDestroy()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        Debug.Log("Stroke");
 
         if (lobbyCreated != null) lobbyCreated.Dispose();
         if (gameLobbyJoinRequested != null) gameLobbyJoinRequested.Dispose();

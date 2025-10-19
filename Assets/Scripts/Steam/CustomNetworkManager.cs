@@ -33,7 +33,7 @@ public class CustomNetworkManager : NetworkManager
         DontDestroyOnLoad(gameObject);
 
         base.Awake();
-        GetComponent<SteamManager>().enabled = true;
+        FindAnyObjectByType<SteamManager>().enabled = true;
     }
 
 
