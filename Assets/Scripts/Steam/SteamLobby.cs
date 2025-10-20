@@ -344,17 +344,15 @@ using UnityEngine.SceneManagement;
                 SteamMatchmaking.SetLobbyData(lobby, "closed", "true");
             }
 
+            // Odejdeme z lobby
+            SteamMatchmaking.LeaveLobby(lobby);
+            lobbyID = 0;
+
             // Stop network
             if (NetworkServer.active && owner == SteamUser.GetSteamID())
                 networkManager.StopHost();
             else if (NetworkClient.isConnected)
                 networkManager.StopClient();
-
-            // Odejdeme z lobby
-            SteamMatchmaking.LeaveLobby(lobby);
-            lobbyID = 0;
-
-
 
             // Vyčistit UI hráčů
             LobbyUIManager.Instance?.ClearLobbyPlayers();

@@ -13,16 +13,6 @@ public class LobbyStarter : MonoBehaviour
         CoroutineStart();
     }
 
-
-    private void OnDestroy()
-    {
-        // ⚠️ KRITICKÉ: Odregistruj event i když HandleLobbyReady neproběhne
-        if (steamLobby != null)
-        {
-            steamLobby.OnLobbyReady -= HandleLobbyReady;
-            Debug.Log("[LobbyStarter] Odregistroval jsem OnLobbyReady v OnDestroy");
-        }
-    }
     public void CoroutineStart()
     {
         if(steamLobby != null && steamLobby.lobbyID != 0)
@@ -41,7 +31,6 @@ public class LobbyStarter : MonoBehaviour
             yield return null;
         }
         steamLobby.gameObject.SetActive(true);
-        steamLobby.OnLobbyReady -= HandleLobbyReady;
         steamLobby.OnLobbyReady += HandleLobbyReady;
         Debug.Log("[LobbyStarter] Připojil jsem se na OnLobbyReady");
 
