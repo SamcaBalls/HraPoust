@@ -8,7 +8,6 @@ public class ReturnToLobbyManager : NetworkBehaviour
     [SerializeField] GameObject prefab;
     public void SendToLobby()
     {
-        DontDestroyOnLoad(gameObject);
         StartCoroutine(GoToLobby());
     }
 
@@ -45,7 +44,6 @@ public class ReturnToLobbyManager : NetworkBehaviour
         networkM.playerPrefab = prefab;
         // Až potom načti Menu
         SceneManager.LoadScene("Menu", LoadSceneMode.Single);
-        Destroy(gameObject);
     }
 
 

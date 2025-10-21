@@ -6716,7 +6716,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Channels: 0200000001000000
-  Timeout: 25
+  Timeout: 5
   AllowSteamRelay: 1
   UseNextGenSteamNetworking: 1
 --- !u!1 &1706664698

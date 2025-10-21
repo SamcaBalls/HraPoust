@@ -94,9 +94,11 @@ using UnityEngine.SceneManagement;
         {
             menuComp.hostButton.onClick.RemoveAllListeners();
             menuComp.returnLobbyButton.onClick.RemoveAllListeners();
+            menuComp.dropdown.onValueChanged.RemoveAllListeners();
 
             menuComp.hostButton.onClick.AddListener(HostLobby);
             menuComp.returnLobbyButton.onClick.AddListener(LeaveLobby);
+            menuComp.dropdown.onValueChanged.AddListener(OnDropdownChange);
 
             var browser = FindAnyObjectByType<LobbyBrowser>();
             if (browser != null)
@@ -371,14 +373,14 @@ using UnityEngine.SceneManagement;
 
 
 
-    public void OnDropdownChange()
-        {
-            privateLobby = menuComp.dropdown.value == 1;
-            Debug.Log("PrivateLobby: " + privateLobby);
+    public void OnDropdownChange(int value)
+    {
+        privateLobby = value == 1;
+        Debug.Log("PrivateLobby: " + privateLobby);
         menuComp.inputFieldHost.interactable = privateLobby;
-        }
+    }
 
-        public void JoinLobby(CSteamID targetLobbyID)
+    public void JoinLobby(CSteamID targetLobbyID)
         {
             string password = SteamMatchmaking.GetLobbyData(targetLobbyID, "password");
 
