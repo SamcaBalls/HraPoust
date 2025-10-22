@@ -53,22 +53,8 @@ public class SpectatorFollowCam : CameraScript
 
         if (currentIndex >= livePlayers.Count) currentIndex = 0;
 
-        if(livePlayers.Count == 0)
-        {
-            GameOverScene();
-        }
     }
 
-    private void GameOverScene()
-    {
-        foreach (var conn in NetworkServer.connections.Values)
-        {
-            if (conn.identity != null)
-                NetworkServer.Destroy(conn.identity.gameObject);
-        }
-
-        SceneManager.LoadScene("GameOver");
-    }
 
     private void FollowCurrentPlayer()
     {

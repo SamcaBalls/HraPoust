@@ -60,16 +60,26 @@ using UnityEngine.SceneManagement;
 
     void OnDestroy()
     {
+        Debug.Log("[SteamLobby] Destroying...");
+
         SceneManager.sceneLoaded -= OnSceneLoaded;
-        Debug.Log("Stroke");
 
-        if (lobbyCreated != null) lobbyCreated.Dispose();
-        if (gameLobbyJoinRequested != null) gameLobbyJoinRequested.Dispose();
-        if (lobbyEntered != null) lobbyEntered.Dispose();
-        if (lobbyChatUpdate != null) lobbyChatUpdate.Dispose();
+        if (SteamManager.Initialized)
+        {
+            try
+            {
+                SteamMatchmaking.LeaveLobby((CSteamID)lobbyID);
+                Debug.Log("[SteamLobby] Left lobby " + lobbyID);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning("[SteamLobby] LeaveLobby failed: " + e.Message);
+            }
+        }
 
-        callbacksRegistered = false;
+        Debug.Log("[SteamLobby] Destroy done.");
     }
+
 
 
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)

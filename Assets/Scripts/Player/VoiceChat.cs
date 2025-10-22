@@ -198,7 +198,7 @@ public class VoiceChat : NetworkBehaviour
         statsTimer += Time.deltaTime;
         if (statsTimer >= 1f)
         {
-            Debug.Log($"[VoiceChat] Sent/sec={sentPacketsThisSec}, Recv/sec={recvPacketsThisSec}, LastRMS={lastSentRms:F5}, BufferUsed={(GetBufferedSamples())} samples");
+            //Debug.Log($"[VoiceChat] Sent/sec={sentPacketsThisSec}, Recv/sec={recvPacketsThisSec}, LastRMS={lastSentRms:F5}, BufferUsed={(GetBufferedSamples())} samples");
             sentPacketsThisSec = recvPacketsThisSec = 0;
             statsTimer = 0f;
         }

@@ -32,10 +32,13 @@ public class PlayerStats : NetworkBehaviour
     public float runFatigueRate = 5f;
     public float fatigueRecoveryRate = 2f;
 
-    private float tweakingRange;
+    public float tweakingRange;
     bool isSafe = false;
     bool ragdoll = false;
     public bool lockinIn = false;
+
+    public static event Action OnAnyPlayerDied;
+
 
     [SerializeField] RagdollHandler ragdollHandler;
     [SerializeField] CameraSwapper cameraSwapper;
@@ -57,7 +60,7 @@ public class PlayerStats : NetworkBehaviour
         if (isLocalPlayer)
         {
             cameraSwapper.SwapCamera(0);
-            tweakingRange = Random.Range(35, 45);
+            tweakingRange = Random.Range(75, 85);
         }
     }
 
@@ -89,7 +92,7 @@ public class PlayerStats : NetworkBehaviour
         {
             RpcOnBurnout();
         }
-        if (fatigue < tweakingRange && currentTweaking == TweakingState.None)
+        if (fatigue > tweakingRange && currentTweaking == TweakingState.None)
         {
             StartTweaking();
         }
@@ -116,12 +119,13 @@ public class PlayerStats : NetworkBehaviour
 
         SetRagdollAll(true, -transform.forward * 10f);
 
+        if (isServer)
+            OnAnyPlayerDied?.Invoke(); // jen server to řeší
+
         if (isLocalPlayer)
-        {
-            Debug.Log("SwapSpec");
             cameraSwapper.SwapCamera(1);
-        }
     }
+
 
     [ClientRpc]
     void RpcOnBurnout()
@@ -139,6 +143,7 @@ public class PlayerStats : NetworkBehaviour
     public void CmdSetRagdoll(bool on)
     {
         Vector3 force = on ? -transform.forward * 10f : Vector3.zero;
+        currentTweaking = TweakingState.None;
         RpcSetRagdoll(on, force);
     }
 
@@ -186,6 +191,7 @@ public class PlayerStats : NetworkBehaviour
 
         // vypne ragdoll přes server, všem se obnoví postava
         CmdSetRagdoll(false);
+
 
         ragdoll = false;
         MovementEnabled(true);
