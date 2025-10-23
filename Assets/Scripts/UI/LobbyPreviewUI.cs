@@ -19,6 +19,7 @@ using TMPro;
             lobbyNameText.text = lobbyName;
         if(SteamMatchmaking.GetLobbyData(lobbyID, "private") == "false")
         {
+            Debug.Log("Sybau");
             privateImage.SetActive(false);
         }
     }
