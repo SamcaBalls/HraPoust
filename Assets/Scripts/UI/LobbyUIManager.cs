@@ -13,6 +13,7 @@ using Steamworks;
         public List<TextMeshProUGUI> playerNameTexts = new List<TextMeshProUGUI>();
         public List<PlayerLobbyHandler> playerLobbyHandlers = new List<PlayerLobbyHandler>();
         public Button playGameButton;
+        PanelSwapper panelSwapper;       
 
         void Awake()
         {
@@ -30,9 +31,24 @@ using Steamworks;
         void Start()
         {
             playGameButton.interactable = false;
+        panelSwapper = GetComponent<PanelSwapper>();
         }
 
-        public void UpdatePlayerLobbyUI()
+    public void SetOnclicks(MenuComponents menuComp)
+    {
+        menuComp.returnLobbyButtonSettings.onClick.RemoveAllListeners();
+        menuComp.returnLobbyButtonSettings.onClick.AddListener(SwapPanelMenu);
+
+        Debug.Log("UIManager - Listeners");
+
+    }
+
+    void SwapPanelMenu()
+    {
+        panelSwapper.SwapPanel("MainPanel");
+    }
+
+    public void UpdatePlayerLobbyUI()
         {
             playerNameTexts.Clear();
             playerLobbyHandlers.Clear();

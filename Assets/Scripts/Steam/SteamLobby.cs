@@ -112,7 +112,12 @@ using UnityEngine.SceneManagement;
 
             var browser = FindAnyObjectByType<LobbyBrowser>();
             if (browser != null)
-                browser.SetOnclicks();
+                browser.SetOnclicks(menuComp);
+
+            var UIManager = FindAnyObjectByType<LobbyUIManager>(FindObjectsInactive.Include);
+            if (UIManager != null)
+                UIManager.SetOnclicks(menuComp);
+
 
             Debug.Log("Added listeners");
         }

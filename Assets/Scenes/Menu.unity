@@ -2219,6 +2219,7 @@ MonoBehaviour:
   playerNameTexts: []
   playerLobbyHandlers: []
   playGameButton: {fileID: 1145281206}
+  panelSwapper: {fileID: 0}
 --- !u!114 &580969835
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2931,6 +2932,7 @@ MonoBehaviour:
   joinButton: {fileID: 1373627705}
   refreshButton: {fileID: 1688162064}
   returnLobbyButton: {fileID: 1037742653}
+  returnLobbyButtonSettings: {fileID: 1183105441}
 --- !u!1 &744636273
 GameObject:
   m_ObjectHideFlags: 0
@@ -4865,19 +4867,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1183105442}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SteamLobbyTutorial.SteamLobby, Assembly-CSharp
-        m_MethodName: LeaveLobby
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!114 &1183105442
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8137,7 +8127,6 @@ MonoBehaviour:
   contentParent: {fileID: 1520350681}
   lobbyPreviewPrefab: {fileID: 3660838802530135904, guid: 576332d7d3526ad4e8daf1a0258a3651, type: 3}
   loadingText: {fileID: 1462391448}
-  menuComp: {fileID: 743742975}
 --- !u!4 &1992566015
 Transform:
   m_ObjectHideFlags: 0

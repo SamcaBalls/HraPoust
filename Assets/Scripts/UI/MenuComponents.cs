@@ -14,4 +14,5 @@ public class MenuComponents : MonoBehaviour
     public Button joinButton;
     public Button refreshButton;
     public Button returnLobbyButton;
+    public Button returnLobbyButtonSettings;
 }

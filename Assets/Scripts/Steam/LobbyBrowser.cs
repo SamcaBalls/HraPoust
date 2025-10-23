@@ -19,8 +19,6 @@ public class LobbyBrowser : MonoBehaviour
     [SerializeField]
     TMP_Text loadingText;
 
-    [SerializeField] MenuComponents menuComp;
-
     void Awake()
     {
         if (Instance == null) Instance = this;
@@ -46,7 +44,7 @@ public class LobbyBrowser : MonoBehaviour
     }
 
 
-    public void SetOnclicks()
+    public void SetOnclicks(MenuComponents menuComp)
     {
         if (menuComp != null)
         {
@@ -57,7 +55,7 @@ public class LobbyBrowser : MonoBehaviour
             menuComp.joinButton.onClick.AddListener(RefreshLobbies);
             menuComp.refreshButton.onClick.AddListener(RefreshLobbies);
 
-            Debug.Log("Added listeners");
+            Debug.Log("Browser - Listeners");
         }
     }
 
