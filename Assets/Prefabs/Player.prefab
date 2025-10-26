@@ -4906,7 +4906,6 @@ GameObject:
   - component: {fileID: 8959137882463238572}
   - component: {fileID: 266174286221698934}
   - component: {fileID: 4901554533920562104}
-  - component: {fileID: 5853988823424046455}
   - component: {fileID: 7335358053909021253}
   - component: {fileID: 4714591851383259814}
   - component: {fileID: 6016705213609321900}
@@ -4916,6 +4915,7 @@ GameObject:
   - component: {fileID: 5894135779029171149}
   - component: {fileID: 916566929777805106}
   - component: {fileID: 7650460851447794126}
+  - component: {fileID: 6392475910981707718}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -4979,6 +4979,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6626c035f46074c49a540bf83fa952c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   _enable: 1
   _Amplitude: 0.0464
   _BaseFrequency: 10
@@ -5001,23 +5004,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   playerParts: []
---- !u!114 &5853988823424046455
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6679807213962537312}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  sceneId: 0
-  _assetId: 3180402599
-  serverOnly: 0
-  visibility: 0
-  hasSpawned: 0
 --- !u!114 &7335358053909021253
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5099,6 +5085,7 @@ MonoBehaviour:
   baseFatigueRate: 1
   runFatigueRate: 3
   fatigueRecoveryRate: 2
+  tweakingRange: 0
   lockinIn: 0
   ragdollHandler: {fileID: 480714387525946084}
   cameraSwapper: {fileID: 3675721233765375065}
@@ -5172,7 +5159,8 @@ MonoBehaviour:
   frameMs: 20
   sendRmsThreshold: 0.005
   playbackBufferSeconds: 2
-  audibleDistance: 40
+  audibleDistance: 70
+  noReverbDistance: 10
   playerSettings: {fileID: 11400000, guid: a51acff82c880b446bc741fa5f1bcc47, type: 2}
 --- !u!82 &5894135779029171149
 AudioSource:
@@ -5196,9 +5184,9 @@ AudioSource:
   Priority: 128
   DopplerLevel: 0.61
   MinDistance: 1
-  MaxDistance: 500
+  MaxDistance: 70
   Pan2D: 0
-  rolloffMode: 0
+  rolloffMode: 2
   BypassEffects: 0
   BypassListenerEffects: 0
   BypassReverbZones: 0
@@ -5208,21 +5196,75 @@ AudioSource:
     - serializedVersion: 3
       time: 0
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -70.02799
+      outSlope: -70.02799
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.0023320336
+      value: 0.47851562
+      inSlope: -17.506998
+      outSlope: -17.506998
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.016325597
+      value: 0.16836548
+      inSlope: -4.3767495
+      outSlope: -4.3767495
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.047230966
+      value: 0.0390625
+      inSlope: -1.0941874
+      outSlope: -1.0941874
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.14402248
+      value: 0
+      inSlope: -0.27354684
+      outSlope: -0.27354684
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.46588615
+      value: 0
+      inSlope: -0.06838671
+      outSlope: -0.06838671
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.95218855
+      value: 0
+      inSlope: -0.017096678
+      outSlope: -0.017096678
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0.014291424
+      outSlope: -0.014291424
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
@@ -5310,6 +5352,23 @@ MonoBehaviour:
   syncInterval: 0
   clientAuthority: 1
   animator: {fileID: 916566929777805106}
+--- !u!114 &6392475910981707718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6679807213962537312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  _assetId: 3180402599
+  serverOnly: 0
+  visibility: 0
+  hasSpawned: 0
 --- !u!1 &6850059056101496995
 GameObject:
   m_ObjectHideFlags: 0

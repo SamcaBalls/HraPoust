@@ -11,15 +11,18 @@ public class TweakingBehaviors : MonoBehaviour
         Debug.Log("Shaky vision effect started");
     }
 
+    public void PartialBlindness()
+    {
+        Debug.Log("Partial blindness effect started");
+    }
+
     public void InvertedInputs()
     {
-        movement.moveSpeed *= 1.5f;
-        Debug.Log("Fast movement effect started");
+        Debug.Log("Inverted inputs effect started");
     }
 
     public void Hallucination()
     {
-        
         Debug.Log("Hallucination effect started");
     }
 

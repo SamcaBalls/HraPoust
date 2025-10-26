@@ -25,7 +25,8 @@ public class VoiceChat : NetworkBehaviour
     public int playbackBufferSeconds = 2;
 
     [Header("Proximity")]
-    public float audibleDistance = 10f;
+    public float audibleDistance = 70f;
+    public float noReverbDistance = 10f;
 
     [SerializeField] private Settings playerSettings;
 
@@ -174,23 +175,26 @@ public class VoiceChat : NetworkBehaviour
 
     void SetupPlaybackClip(int newSampleRate)
     {
-        // pokud audioSource není přiřazen, nic neděláme
         if (audioSource == null) return;
 
-        // vytvoříme malý clip (1s) a necháme ho loopovat - OnAudioFilterRead bude voláno
         AudioClip clip = AudioClip.Create("VoiceOut_" + newSampleRate, newSampleRate, 1, newSampleRate, false);
         audioSource.clip = clip;
         audioSource.loop = true;
         audioSource.playOnAwake = false;
-        audioSource.spatialBlend = 1f; // 3D audio
+
+        // 🎧 3D audio s lineárním útlumem
+        audioSource.spatialBlend = 1f;
+        audioSource.minDistance = 1f;
+        audioSource.rolloffMode = AudioRolloffMode.Custom;
         audioSource.maxDistance = audibleDistance;
+
         audioSource.Play();
 
-        // (re)alokujeme playBuffer
         playBufferLen = Mathf.Max(1024, newSampleRate * Mathf.Max(1, playbackBufferSeconds));
         playBuffer = new float[playBufferLen];
         playWritePos = playReadPos = 0;
     }
+
 
     void Update()
     {
@@ -333,7 +337,7 @@ public class VoiceChat : NetworkBehaviour
                 return;
         }
 
-        if (!isLocalPlayer)
+        if (!isLocalPlayer && distance > noReverbDistance)
         {
             AddReverb(audioSource, distance);
             Debug.Log($"[VoiceChat] Received voice from {gameObject.name} at distance {distance:F2} meters");

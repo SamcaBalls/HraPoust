@@ -1,7 +1,8 @@
 ﻿using SteamLobbyTutorial;
 using UnityEngine;
+using Mirror;
 
-public class Headbob : MonoBehaviour
+public class Headbob : NetworkBehaviour
 {
     [Header("Configuration")]
     [SerializeField] private bool _enable = true;
@@ -27,6 +28,7 @@ public class Headbob : MonoBehaviour
 
     void LateUpdate()
     {
+        if (!isLocalPlayer) return;
         if (!_enable) return;
 
         // spočítáme bob podle pohybu

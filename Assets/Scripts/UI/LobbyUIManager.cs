@@ -31,7 +31,7 @@ using Steamworks;
         void Start()
         {
             playGameButton.interactable = false;
-        panelSwapper = GetComponent<PanelSwapper>();
+            panelSwapper = GetComponent<PanelSwapper>();
         }
 
     public void SetOnclicks(MenuComponents menuComp)
