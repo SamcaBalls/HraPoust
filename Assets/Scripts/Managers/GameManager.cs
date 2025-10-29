@@ -27,16 +27,9 @@ public class GameManager : NetworkBehaviour
         }
     }
 
-    void Start()
-    {
-        if (isServer)
-        {
-            WritePlayers();
-        }
-    }
 
     [Server]
-    void WritePlayers()
+    public void WritePlayers()
     {
         players.Clear();
 
@@ -212,5 +205,11 @@ public class GameManager : NetworkBehaviour
             Debug.Log("[GameManager] Všichni hráči resetováni na ALIVE");
 
         RpcSyncPlayers();
+    }
+
+    [Server]
+    public void ClearList()
+    {
+        players.Clear();
     }
 }

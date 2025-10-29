@@ -4,17 +4,27 @@ public class PauseMenu : MonoBehaviour
 {
     [SerializeField] GameObject canvas;
     [SerializeField] PlayerStats playerStats;
-    public void ShowPauseMenu(bool show)
+
+    bool on = false;
+    void ShowPauseMenu()
     {
-        Cursor.lockState = show ? CursorLockMode.None : CursorLockMode.Locked;
-        Cursor.visible = show;
-        canvas.SetActive(show);
-        playerStats.MovementEnabled(!show);
+        Cursor.lockState = on ? CursorLockMode.None : CursorLockMode.Locked;
+        Cursor.visible = on;
+        canvas.SetActive(on);
+        playerStats.MovementEnabled(!on);
+    }
+
+    public void HandlePause()
+    {
+        on = !on;
+        ShowPauseMenu();
     }
 
     private void Update()
     {
-        if (Input.GetKey(KeyCode.P))
-            ShowPauseMenu(true);
+        if (Input.GetKeyDown(KeyCode.P))
+        {
+            HandlePause();
+        }
     }
 }

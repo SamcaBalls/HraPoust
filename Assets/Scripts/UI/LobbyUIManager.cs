@@ -13,7 +13,7 @@ using Steamworks;
         public List<TextMeshProUGUI> playerNameTexts = new List<TextMeshProUGUI>();
         public List<PlayerLobbyHandler> playerLobbyHandlers = new List<PlayerLobbyHandler>();
         public Button playGameButton;
-        PanelSwapper panelSwapper;       
+        PanelSwapper panelSwapper;  
 
         void Awake()
         {
@@ -108,6 +108,7 @@ using Steamworks;
 
         if (allReady)
         {
+            GameManager.Instance.WritePlayers();
             CustomNetworkManager.singleton.ServerChangeScene("GameplayScene");
         }
         else

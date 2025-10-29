@@ -38,6 +38,7 @@ public class GameOverServerTrigger : NetworkBehaviour
     [ClientRpc]
     void RpcLoadGameOver()
     {
+        FindAnyObjectByType<GameManager>().ClearList();
         UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
     }
 }

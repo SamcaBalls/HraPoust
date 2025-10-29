@@ -1,5 +1,6 @@
 ﻿using Mirror;
 using SteamLobbyTutorial;
+using Steamworks;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -119,12 +120,26 @@ public class PlayerStats : NetworkBehaviour
 
         SetRagdollAll(true, -transform.forward * 10f);
 
+
         if (isServer)
             OnAnyPlayerDied?.Invoke(); // jen server to řeší
 
         if (isLocalPlayer)
+        {
             cameraSwapper.SwapCamera(1);
+            CmdNotifyDeath();
+        }
     }
+
+    [Command]
+    void CmdNotifyDeath()
+    {
+        ulong steamID = SteamUser.GetSteamID().m_SteamID;
+
+        if (GameManager.Instance != null)
+            GameManager.Instance.SetPlayerDead(steamID);
+    }
+
 
 
     [ClientRpc]
@@ -198,6 +213,15 @@ public class PlayerStats : NetworkBehaviour
         cameraSwapper.SwapCamera(0);
         headShower.GiveHead(false);
         lockinIn = false;
+        CmdNotifyRevive();
+    }
+
+    [Command]
+    void CmdNotifyRevive()
+    {
+        ulong steamID = SteamUser.GetSteamID().m_SteamID;
+        if (GameManager.Instance != null)
+            GameManager.Instance.SetPlayerAlive(steamID);
     }
 
     void StartTweaking()

@@ -3,75 +3,58 @@ using UnityEngine;
 using Mirror;
 using Steamworks;
 
-/// <summary>
-/// Monitoruje stav pøipojení klienta a automaticky ho odpojí pøi ztrátì spojení
-/// </summary>
 public class ConnectionMonitor : MonoBehaviour
 {
     [Header("Nastavení")]
-    [Tooltip("Jak èasto kontrolovat pøipojení (v sekundách)")]
     [SerializeField] private float checkInterval = 2f;
-
-    [Tooltip("Timeout pro detekci ztráty pøipojení (v sekundách)")]
     [SerializeField] private float connectionTimeout = 10f;
-
-    [Tooltip("Povolit automatické odpojení pøi ztrátì spojení")]
     [SerializeField] private bool autoDisconnect = true;
 
     [Header("Debug")]
     [SerializeField] private bool showDebugLogs = true;
 
-    [SerializeField] ReturnToLobbyManager rtlMan;
+    [SerializeField] private ReturnToLobbyManager rtlMan;
 
     private float lastPacketTime;
     private bool isMonitoring = false;
     private Coroutine monitorCoroutine;
 
-    // Event pro notifikaci o ztrátì pøipojení
     public System.Action OnConnectionLost;
 
-    void Start()
+    private static ConnectionMonitor instance; // ?? singleton instance
+
+    private void Start()
     {
-        // Registrace Mirror callbackù
         NetworkClient.RegisterHandler<NetworkPingMessage>(OnPingMessage);
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
-        // Zaèít monitorovat pokud už je klient pøipojený
         if (NetworkClient.isConnected)
-        {
             StartMonitoring();
-        }
     }
 
-    void OnDisable()
+    private void OnDisable()
     {
         StopMonitoring();
     }
 
-    void OnDestroy()
+    private void OnDestroy()
     {
+        if (instance == this)
+            instance = null;
+
         StopMonitoring();
     }
 
-    void Update()
+    private void Update()
     {
-        // Automaticky zaèít monitorovat pøi pøipojení
         if (NetworkClient.isConnected && !isMonitoring)
-        {
             StartMonitoring();
-        }
-        // Zastavit monitorování pøi odpojení
         else if (!NetworkClient.isConnected && isMonitoring)
-        {
             StopMonitoring();
-        }
     }
 
-    /// <summary>
-    /// Spustí monitorování pøipojení
-    /// </summary>
     public void StartMonitoring()
     {
         if (isMonitoring) return;
@@ -88,9 +71,6 @@ public class ConnectionMonitor : MonoBehaviour
             Debug.Log("[ConnectionMonitor] Zahájeno monitorování pøipojení");
     }
 
-    /// <summary>
-    /// Zastaví monitorování pøipojení
-    /// </summary>
     public void StopMonitoring()
     {
         if (!isMonitoring) return;
@@ -102,58 +82,48 @@ public class ConnectionMonitor : MonoBehaviour
             StopCoroutine(monitorCoroutine);
             monitorCoroutine = null;
         }
+        if(rtlMan.gameObject.activeSelf == true)
+        {
+        rtlMan.SendToLobby();
+
+        }
 
         if (showDebugLogs)
             Debug.Log("[ConnectionMonitor] Monitorování zastaveno");
     }
 
-    /// <summary>
-    /// Hlavní coroutine pro monitorování pøipojení
-    /// </summary>
     private IEnumerator MonitorConnection()
     {
         while (isMonitoring)
         {
             yield return new WaitForSeconds(checkInterval);
 
-            // Kontrola pouze pokud jsme klient (ne server/host)
             if (!NetworkServer.active && NetworkClient.isConnected)
             {
                 float timeSinceLastPacket = Time.time - lastPacketTime;
 
                 if (showDebugLogs && timeSinceLastPacket > connectionTimeout * 0.5f)
-                {
                     Debug.LogWarning($"[ConnectionMonitor] Dlouhá doba bez odpovìdi: {timeSinceLastPacket:F1}s");
-                }
 
-                // Pokud pøekroèíme timeout, odpojíme se
                 if (timeSinceLastPacket > connectionTimeout)
                 {
                     HandleConnectionLost();
                     yield break;
                 }
 
-                // Kontrola Steam pøipojení
-                if (SteamManager.Initialized)
+                if (SteamManager.Initialized && !CheckSteamConnection())
                 {
-                    if (!CheckSteamConnection())
-                    {
-                        HandleConnectionLost();
-                        yield break;
-                    }
+                    HandleConnectionLost();
+                    yield break;
                 }
             }
         }
     }
 
-    /// <summary>
-    /// Kontrola Steam pøipojení
-    /// </summary>
     private bool CheckSteamConnection()
     {
         try
         {
-            // Kontrola jestli je Steam stále pøipojený
             if (!SteamAPI.IsSteamRunning())
             {
                 if (showDebugLogs)
@@ -161,12 +131,9 @@ public class ConnectionMonitor : MonoBehaviour
                 return false;
             }
 
-            // Kontrola lobby pøipojení
             if (SteamLobby.Instance != null && SteamLobby.Instance.lobbyID != 0)
             {
-                CSteamID lobby = new CSteamID(SteamLobby.Instance.lobbyID);
-
-                // Ovìøíme že lobby stále existuje
+                var lobby = new CSteamID(SteamLobby.Instance.lobbyID);
                 int numMembers = SteamMatchmaking.GetNumLobbyMembers(lobby);
 
                 if (numMembers <= 0)
@@ -186,28 +153,18 @@ public class ConnectionMonitor : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Zpracování ztráty pøipojení
-    /// </summary>
     private void HandleConnectionLost()
     {
         Debug.LogError("[ConnectionMonitor] Ztráta pøipojení detekována!");
 
-        // Vyvoláme event
         OnConnectionLost?.Invoke();
 
-        // Automatické odpojení
         if (autoDisconnect)
-        {
             DisconnectClient();
-        }
 
         StopMonitoring();
     }
 
-    /// <summary>
-    /// Odpojí klienta a vrátí ho do menu
-    /// </summary>
     private void DisconnectClient()
     {
         if (showDebugLogs)
@@ -215,7 +172,7 @@ public class ConnectionMonitor : MonoBehaviour
 
         try
         {
-            rtlMan.SendToLobby();
+            rtlMan?.SendToLobby(); // ?? bezpeènìjší null check
         }
         catch (System.Exception e)
         {
@@ -223,39 +180,13 @@ public class ConnectionMonitor : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Zobrazí zprávu o odpojení (pøizpùsob podle tvého UI systému)
-    /// </summary>
-    private void ShowDisconnectionMessage()
-    {
-        // Zde mùžeš implementovat zobrazení UI zprávy
-        var menuComp = FindAnyObjectByType<MenuComponents>();
-        if (menuComp != null)
-        {
-            // Napøíklad:
-            // menuComp.ShowNotification("Pøipojení ztraceno. Byli jste odpojeni ze hry.");
-        }
-
-        Debug.Log("[ConnectionMonitor] Klient byl odpojen z dùvodu ztráty pøipojení");
-    }
-
-    /// <summary>
-    /// Handler pro ping zprávy - resetuje timeout
-    /// </summary>
     private void OnPingMessage(NetworkPingMessage msg)
     {
         lastPacketTime = Time.time;
     }
 
-    /// <summary>
-    /// Manuální resetování èasu posledního packetu (volej pøi pøijetí jakékoliv zprávy)
-    /// </summary>
-    public void ResetConnectionTimer()
-    {
-        lastPacketTime = Time.time;
-    }
+    public void ResetConnectionTimer() => lastPacketTime = Time.time;
 
-    // Gettery pro debug
     public float TimeSinceLastPacket => Time.time - lastPacketTime;
     public bool IsMonitoring => isMonitoring;
 }

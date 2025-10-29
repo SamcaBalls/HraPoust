@@ -17,7 +17,10 @@ using UnityEngine.SceneManagement;
         }
         public ulong lobbyID;
         public NetworkManager networkManager;
-        public MenuComponents menuComp;    
+        public MenuComponents menuComp;
+    public ConnectionMonitor connMon;
+    public GameManager gameManager;
+        
         bool privateLobby = false;
 
         private Callback<LobbyCreated_t> lobbyCreated;
@@ -128,6 +131,8 @@ using UnityEngine.SceneManagement;
     {
         DontDestroyOnLoad(gameObject);
         networkManager = FindAnyObjectByType<NetworkManager>();
+        connMon = FindAnyObjectByType<ConnectionMonitor>(FindObjectsInactive.Include);
+        gameManager = FindAnyObjectByType<GameManager>(FindObjectsInactive.Include);
 
         // Manuální inicializace, protože sceneLoaded se nevolá při prvním načtení
         InitializeMenu();
@@ -264,6 +269,9 @@ using UnityEngine.SceneManagement;
                 Debug.Log("Jsem host, ignoruji join request");
                 return;
             }
+
+            connMon.gameObject.SetActive(true);
+            gameManager.gameObject.SetActive(true);
 
             lobbyID = callback.m_ulSteamIDLobby;
             var lobby = new CSteamID(lobbyID);
