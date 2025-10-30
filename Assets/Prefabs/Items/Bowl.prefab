@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6346413701667921006}
   - component: {fileID: 4746373299780005593}
   - component: {fileID: 2844367890012284139}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Water
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,9 @@ GameObject:
   - component: {fileID: 7597604796418600057}
   - component: {fileID: -619938471006206258}
   - component: {fileID: 6689906589088601916}
-  m_Layer: 0
+  - component: {fileID: 3803997286035473892}
+  - component: {fileID: 7928738091270316358}
+  m_Layer: 8
   m_Name: Bowl
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -133,9 +135,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd695d5a06dd6d44c8f420238e41fc41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TestFill: 0
   spillable: 1
   maxCapacity: 20
-  capacity: 0
+  _capacity: 0
   minLoss: 1
   maxLoss: 10
   water: {fileID: 6689906589088601916}
@@ -155,6 +158,40 @@ MonoBehaviour:
   water: {fileID: 5350496923561734437}
   minHeight: 0.06
   maxHeight: 0.25
+--- !u!65 &3803997286035473892
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642140547525374168}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 0.56654906, z: 1}
+  m_Center: {x: 0, y: 0.21672547, z: 0}
+--- !u!114 &7928738091270316358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5642140547525374168}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 003d167874932a748b435d54ca819475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemName: Bowl
 --- !u!1001 &4563333571338248217
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -210,6 +247,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: ff56f44c65e325443ab04064f0456db0, type: 3}
       propertyPath: m_Name
       value: bowl
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: ff56f44c65e325443ab04064f0456db0, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1680,8 +1680,13 @@ MonoBehaviour:
   cam: {fileID: 884727997153240965}
   settings: {fileID: 11400000, guid: a51acff82c880b446bc741fa5f1bcc47, type: 2}
   playerBody: {fileID: 6744607129831417622}
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  interactRange: 3
   clampAngle: 85
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  interact: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
 --- !u!1 &1906310529879518940
 GameObject:
   m_ObjectHideFlags: 0

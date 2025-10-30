@@ -45,14 +45,14 @@ public class RagdollDrag : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
-        if (Input.GetKeyDown(KeyCode.E) && targetRagdoll != null)
+        if (Input.GetKeyDown(KeyCode.F) && targetRagdoll != null)
         {
             Debug.Log("Zkusim");
             if (currentJoint == null)
                 CmdGrabRagdoll(targetIdentity);
             else
                 CmdRelease();
-        }else if (Input.GetKeyDown(KeyCode.E))
+        }else if (Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("Ragdoll je null");
         }
