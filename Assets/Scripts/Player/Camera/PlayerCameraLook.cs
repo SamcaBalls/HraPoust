@@ -16,7 +16,6 @@ public class PlayerCameraLook : CameraScript
     private float xRotation = 0f;
 
     [SerializeField] private InputActionReference look;
-    [SerializeField] private InputActionReference interact; // nová akce pro "E" nebo "Use"
 
     private Camera cam;
     private ItemPickup currentTarget;
@@ -39,7 +38,6 @@ public class PlayerCameraLook : CameraScript
 
         // Aktivace input akcí
         look.action.Enable();
-        interact.action.Enable();
     }
 
     public override void OnStartClient()
@@ -58,7 +56,6 @@ public class PlayerCameraLook : CameraScript
         if (!isLocalPlayer) return;
 
         HandleLook();
-        HandleInteractionRaycast();
     }
 
     private void HandleLook()
@@ -75,30 +72,4 @@ public class PlayerCameraLook : CameraScript
         playerBody.Rotate(Vector3.up * mouseX);
     }
 
-    private void HandleInteractionRaycast()
-    {
-        if (cam == null) return;
-
-        Ray ray = new Ray(cam.transform.position, cam.transform.forward);
-        if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
-        {
-            ItemPickup pickup = hit.collider.gameObject.GetComponent<ItemPickup>();
-            if (pickup != null)
-            {
-                // Míøíme na interaktivní objekt
-                currentTarget = pickup;
-
-                // Po stisku E
-                if (Input.GetKeyDown(KeyCode.E))
-                {
-                    Debug.Log("Bum");
-                    pickup.OnPickup(gameObject);
-                }
-            }
-        }
-        else
-        {
-            currentTarget = null;
-        }
-    }
 }

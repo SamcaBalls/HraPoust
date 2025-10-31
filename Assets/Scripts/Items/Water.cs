@@ -20,7 +20,7 @@ public class Water : MonoBehaviour
         // Nastavení pozice
         Vector3 pos = water.transform.position;
         pos.y = drink.transform.position.y + yPosition;
-        water.transform.position = pos;
+        water.transform.localPosition = new Vector3(0, yPosition, 0);
 
         // Viditelnost
         water.SetActive(fillRatio > 0);

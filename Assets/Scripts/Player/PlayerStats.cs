@@ -45,6 +45,7 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] CameraSwapper cameraSwapper;
     [SerializeField] HideLocalPlayerModel headShower;
 
+    public bool hasWater = false;
 
     void Awake()
     {
