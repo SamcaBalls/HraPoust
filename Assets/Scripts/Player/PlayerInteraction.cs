@@ -57,7 +57,7 @@ public class PlayerInteraction : MonoBehaviour
             holdPoint.transform.localPosition = heldItem.HoldPosition;
             holdPoint.transform.localRotation = heldItem.HoldRotation;
             heldItem.OnPickup(gameObject);
-            playerStats.hasWater = true;
+            playerStats.drinkObject = heldItem.GetComponent<DrinkableObject>();
 
             Rigidbody rb = heldItem.GetComponent<Rigidbody>();
             if (rb != null) rb.isKinematic = true;
@@ -96,6 +96,9 @@ public class PlayerInteraction : MonoBehaviour
         // Drop
         if (Keyboard.current.qKey.wasPressedThisFrame)
             DropItem();
+
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+            DrinkItem();
     }
 
     private void DropItem()
@@ -104,8 +107,18 @@ public class PlayerInteraction : MonoBehaviour
         Rigidbody rb = heldItem.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = false;
         heldItem.isPickedUp = false;
+        StartCoroutine(heldItem.DeathTimer());
         heldItem = null;
-        playerStats.hasWater = false;
-        
+        playerStats.drinkObject = null;
+    }
+
+    private void DrinkItem()
+    {
+        if (heldItem == null) return;
+        if (playerStats.drinkObject.Capacity <= 0) return;
+
+        StartCoroutine(playerStats.ChangeFatigueSmooth(-playerStats.drinkObject.Capacity * 2, 3));
+
+        playerStats.drinkObject.Capacity = 0;
     }
 }

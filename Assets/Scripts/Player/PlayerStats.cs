@@ -45,7 +45,7 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] CameraSwapper cameraSwapper;
     [SerializeField] HideLocalPlayerModel headShower;
 
-    public bool hasWater = false;
+    public DrinkableObject drinkObject;   
 
     void Awake()
     {
@@ -113,6 +113,27 @@ public class PlayerStats : NetworkBehaviour
     {
         fatigue = Mathf.Clamp(value, 0, maxFatigue);
     }
+
+    public IEnumerator ChangeFatigueSmooth(float changeValue, float time)
+    {
+        float startFatigue = fatigue;
+        float targetFatigue = Mathf.Clamp(startFatigue + changeValue, 0, maxFatigue);
+
+        float elapsed = 0f;
+
+        while (elapsed < time)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / time;
+            float newFatigue = Mathf.Lerp(startFatigue, targetFatigue, t);
+            CmdChangeFatigue(newFatigue);
+            yield return null;
+        }
+
+        // zajistí přesnou cílovou hodnotu na konci
+        CmdChangeFatigue(targetFatigue);
+    }
+
 
     [ClientRpc]
     void RpcOnDeath()
@@ -199,11 +220,8 @@ public class PlayerStats : NetworkBehaviour
     public IEnumerator LockIn()
     {
         lockinIn = true;
-        while (fatigue > 0)
-        {
-            yield return new WaitForSeconds(0.01f);
-            CmdChangeFatigue(fatigue - 1);
-        }
+
+        yield return ChangeFatigueSmooth(-fatigue, 5);
 
         // vypne ragdoll přes server, všem se obnoví postava
         CmdSetRagdoll(false);

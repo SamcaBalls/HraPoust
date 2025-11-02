@@ -1707,6 +1707,7 @@ MonoBehaviour:
   interact: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   holdPoint: {fileID: 3560454979262778134}
   playerStats: {fileID: 6016705213609321900}
+  animator: {fileID: 916566929777805106}
 --- !u!1 &1906310529879518940
 GameObject:
   m_ObjectHideFlags: 0
@@ -5147,7 +5148,7 @@ MonoBehaviour:
   ragdollHandler: {fileID: 8092633473532240395}
   cameraSwapper: {fileID: 3675721233765375065}
   headShower: {fileID: 6282391909551969834}
-  hasWater: 0
+  drinkObject: {fileID: 0}
 --- !u!114 &6434174582869379501
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -174,7 +174,9 @@ MonoBehaviour:
   itemName: Bowl
   isPickedUp: 0
   HoldPosition: {x: 0, y: -0.15, z: 0.74}
+  HoldRotation: {x: 0, y: 0, z: 0, w: 0}
   useHands: 0
+  deathTime: 5
 --- !u!65 &3803997286035473892
 BoxCollider:
   m_ObjectHideFlags: 0
