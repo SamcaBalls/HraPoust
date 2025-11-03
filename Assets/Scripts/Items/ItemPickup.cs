@@ -19,6 +19,11 @@ public class ItemPickup : MonoBehaviour
         Debug.Log($"Player picked up {itemName}");
     }
 
+    public virtual void OnInteract(GameObject player)
+    {
+        Debug.Log($"Player used {itemName}");
+    }
+
     public IEnumerator DeathTimer()
     {
         float elapsed = 0f;

@@ -9,6 +9,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private InputActionReference interact;
     [SerializeField] private Transform holdPoint;
     [SerializeField] private PlayerStats playerStats;
+    [SerializeField] Animator animator;
 
     private ItemPickup currentTarget;
     private ItemPickup heldItem;
@@ -67,7 +68,7 @@ public class PlayerInteraction : MonoBehaviour
             heldItem.transform.localRotation = Quaternion.identity;
             if (heldItem.useHands)
             {
-                //Logika pro ruce
+                animator.SetBool("Carrying", true);
             }
         }
         else
@@ -98,7 +99,7 @@ public class PlayerInteraction : MonoBehaviour
             DropItem();
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
-            DrinkItem();
+            UseItem();
     }
 
     private void DropItem()
@@ -110,15 +111,11 @@ public class PlayerInteraction : MonoBehaviour
         StartCoroutine(heldItem.DeathTimer());
         heldItem = null;
         playerStats.drinkObject = null;
+        animator.SetBool("Carrying", false);
     }
 
-    private void DrinkItem()
+    private void UseItem()
     {
-        if (heldItem == null) return;
-        if (playerStats.drinkObject.Capacity <= 0) return;
-
-        StartCoroutine(playerStats.ChangeFatigueSmooth(-playerStats.drinkObject.Capacity * 2, 3));
-
-        playerStats.drinkObject.Capacity = 0;
+        heldItem.OnInteract(playerStats.gameObject);
     }
 }
