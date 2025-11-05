@@ -11,6 +11,8 @@ public class ItemPickup : MonoBehaviour
     public Quaternion HoldRotation;
     public bool useHands;
     [SerializeField] float deathTime = 60;
+    public DrinkableObject drinkableObject;
+
 
     // Volá se z player skriptu pøi interakci
     public virtual void OnPickup(GameObject player)
@@ -40,5 +42,7 @@ public class ItemPickup : MonoBehaviour
         Debug.Log($"{itemName} destroyed after being left on ground");
         Destroy(gameObject);
     }
+
+
 
 }

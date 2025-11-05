@@ -40,7 +40,7 @@ public class PlayerStats : NetworkBehaviour
 
     public static event Action OnAnyPlayerDied;
 
-
+    [SerializeField] PlayerInteraction playerInteraction;
     [SerializeField] RagdollHandler ragdollHandler;
     [SerializeField] CameraSwapper cameraSwapper;
     [SerializeField] HideLocalPlayerModel headShower;
@@ -142,6 +142,7 @@ public class PlayerStats : NetworkBehaviour
 
         SetRagdollAll(true, -transform.forward * 10f);
 
+        playerInteraction.DropItem();
 
         if (isServer)
             OnAnyPlayerDied?.Invoke(); // jen server to řeší

@@ -1708,6 +1708,7 @@ MonoBehaviour:
   holdPoint: {fileID: 3560454979262778134}
   playerStats: {fileID: 6016705213609321900}
   animator: {fileID: 916566929777805106}
+  handPosition: {x: 0, y: 0.15, z: 0.598}
 --- !u!1 &1906310529879518940
 GameObject:
   m_ObjectHideFlags: 0
@@ -4045,7 +4046,7 @@ Transform:
   m_GameObject: {fileID: 5392797257582878303}
   serializedVersion: 2
   m_LocalRotation: {x: 0.0000005364417, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.139, z: 0.49}
+  m_LocalPosition: {x: 0, y: 0.136, z: 0.598}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5145,6 +5146,7 @@ MonoBehaviour:
   fatigueRecoveryRate: 2
   tweakingRange: 0
   lockinIn: 0
+  playerInteraction: {fileID: 8776194609480059222}
   ragdollHandler: {fileID: 8092633473532240395}
   cameraSwapper: {fileID: 3675721233765375065}
   headShower: {fileID: 6282391909551969834}

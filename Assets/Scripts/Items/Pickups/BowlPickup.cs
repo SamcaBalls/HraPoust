@@ -12,4 +12,8 @@ public class BowlPickup : ItemPickup
 
         playerStats.drinkObject.Capacity = 0;
     }
+
+
+
+
 }

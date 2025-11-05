@@ -1,12 +1,17 @@
 ﻿using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
+using UnityEngine.UIElements;
 
 public class DrinkableObject : MonoBehaviour
 {
     public bool TestFill;
     public bool spillable;
     public int maxCapacity = 20;
+    [SerializeField] LayerMask groundMask;
+    [SerializeField] GameObject spillParticle;
+    [SerializeField] ParticleManager particleManager;
 
     [SerializeField] int _capacity;
     public int Capacity
@@ -26,7 +31,8 @@ public class DrinkableObject : MonoBehaviour
 
     private void Start()
     {
-        Capacity = maxCapacity;
+        Capacity = Random.Range(maxCapacity/3, maxCapacity);
+        particleManager = FindAnyObjectByType<ParticleManager>();
         if (TestFill) StartCoroutine(TryFill());
     }
 
@@ -42,7 +48,11 @@ public class DrinkableObject : MonoBehaviour
             }
             else
             {
-                Capacity -= Random.Range(0, maxCapacity / 2);
+                if(Capacity != 0)
+                {
+                    Capacity -= Random.Range(minLoss , maxLoss);
+                    particleManager.SpawnParticle(spillParticle, gameObject.transform.position);
+                }
             }
             if(Capacity < 0) Capacity = 0;
         }
@@ -70,6 +80,16 @@ public class DrinkableObject : MonoBehaviour
 
         }
 
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Kontrola, jestli vrstva kolidujícího objektu je v groundMask
+        if (((1 << collision.collider.gameObject.layer) & groundMask) != 0 && spillable)
+        {
+            Debug.Log("Dotkl jsem se země!");
+            ChangeCapacity(true);
+        }
     }
 }
 

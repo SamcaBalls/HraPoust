@@ -138,9 +138,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd695d5a06dd6d44c8f420238e41fc41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TestFill: 1
+  TestFill: 0
   spillable: 1
   maxCapacity: 20
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 512
+  spillParticle: {fileID: 4731459712076708334, guid: 8377dee9099788541a6c081ebfaede58, type: 3}
   _capacity: 0
   minLoss: 1
   maxLoss: 10
@@ -179,6 +183,7 @@ MonoBehaviour:
   HoldRotation: {x: 0, y: 0, z: 0, w: 0}
   useHands: 1
   deathTime: 5
+  drinkableObject: {fileID: -619938471006206258}
 --- !u!65 &3803997286035473892
 BoxCollider:
   m_ObjectHideFlags: 0

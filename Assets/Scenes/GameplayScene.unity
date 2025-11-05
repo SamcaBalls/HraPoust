@@ -129,9 +129,10 @@ GameObject:
   m_Component:
   - component: {fileID: 177159680}
   - component: {fileID: 177159679}
+  - component: {fileID: 177159682}
   - component: {fileID: 177159681}
   m_Layer: 0
-  m_Name: GamePlayManager
+  m_Name: SpawnManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -185,6 +186,21 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!114 &177159682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 177159678}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 608567072b8fea34ba6622dc9c61ffdb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
 --- !u!1 &300176130
 GameObject:
   m_ObjectHideFlags: 0
@@ -276,7 +292,7 @@ GameObject:
   - component: {fileID: 501908766}
   - component: {fileID: 501908765}
   - component: {fileID: 501908764}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: PodlahaPISEK
   m_TagString: Sand
   m_Icon: {fileID: 0}
@@ -518,7 +534,7 @@ GameObject:
   - component: {fileID: 1264378647}
   - component: {fileID: 1264378646}
   - component: {fileID: 1264378645}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Podlaha
   m_TagString: Untagged
   m_Icon: {fileID: 0}

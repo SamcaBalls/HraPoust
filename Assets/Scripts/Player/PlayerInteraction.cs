@@ -10,6 +10,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private Transform holdPoint;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] Animator animator;
+    [SerializeField] Vector3 handPosition;
 
     private ItemPickup currentTarget;
     private ItemPickup heldItem;
@@ -100,10 +101,18 @@ public class PlayerInteraction : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Mouse1))
             UseItem();
+        if (Input.GetKeyDown(KeyCode.R))
+            HandItem();
+
+        if (Input.GetKeyUp(KeyCode.R))
+            UnhandItem();
     }
 
-    private void DropItem()
+
+    public void DropItem()
     {
+        if(heldItem == null) return;
+
         heldItem.transform.SetParent(null);
         Rigidbody rb = heldItem.GetComponent<Rigidbody>();
         if (rb != null) rb.isKinematic = false;
@@ -117,5 +126,19 @@ public class PlayerInteraction : MonoBehaviour
     private void UseItem()
     {
         heldItem.OnInteract(playerStats.gameObject);
+    }
+
+    private void HandItem()
+    {
+        animator.SetBool("Hand", true);
+        heldItem.isPickedUp = false;
+        holdPoint.transform.localPosition = handPosition; 
+    }
+
+    public void UnhandItem()
+    {
+        animator.SetBool("Hand", false);
+        heldItem.isPickedUp = true;
+        holdPoint.transform.localPosition = heldItem.HoldPosition;
     }
 }
