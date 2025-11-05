@@ -101,7 +101,7 @@ GameObject:
   - component: {fileID: 3803997286035473892}
   - component: {fileID: -1978632129574374230}
   - component: {fileID: -4776197684699472924}
-  - component: {fileID: -528028708994952958}
+  - component: {fileID: 1759362552280271346}
   m_Layer: 8
   m_Name: Bowl
   m_TagString: Untagged
@@ -138,6 +138,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd695d5a06dd6d44c8f420238e41fc41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
   TestFill: 0
   spillable: 1
   maxCapacity: 20
@@ -145,6 +148,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 512
   spillParticle: {fileID: 4731459712076708334, guid: 8377dee9099788541a6c081ebfaede58, type: 3}
+  particleManager: {fileID: 0}
   _capacity: 0
   minLoss: 1
   maxLoss: 10
@@ -249,7 +253,7 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
---- !u!114 &-528028708994952958
+--- !u!114 &1759362552280271346
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -258,30 +262,31 @@ MonoBehaviour:
   m_GameObject: {fileID: 5642140547525374168}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8f63ea2e505fd484193fb31c5c55ca73, type: 3}
+  m_Script: {fileID: 11500000, guid: 8ff3ba0becae47b8b9381191598957c8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncDirection: 1
   syncMode: 0
-  syncInterval: 0.033333335
-  baselineRate: 1
-  unreliableRedundancy: 0
-  baselineIsDelta: 1
-  debugLog: 0
-  useFixedUpdate: 0
+  syncInterval: 0
   target: {fileID: 7597604796418600057}
-  bufferSizeLimit: 64
-  sendRate: 30
-  positionSensitivity: 0.01
-  rotationSensitivity: 0.01
-  scaleSensitivity: 0.01
   syncPosition: 1
   syncRotation: 1
   syncScale: 0
-  debugDraw: 0
+  onlySyncOnChange: 1
+  compressRotation: 1
+  interpolatePosition: 1
+  interpolateRotation: 1
+  interpolateScale: 1
+  coordinateSpace: 0
+  timelineOffset: 1
   showGizmos: 0
   showOverlay: 0
   overlayColor: {r: 0, g: 0, b: 0, a: 0.5}
+  onlySyncOnChangeCorrectionMultiplier: 2
+  useFixedUpdate: 0
+  rotationSensitivity: 0.01
+  positionPrecision: 0.01
+  scalePrecision: 0.01
 --- !u!1001 &4563333571338248217
 PrefabInstance:
   m_ObjectHideFlags: 0

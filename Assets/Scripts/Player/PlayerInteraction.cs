@@ -54,8 +54,12 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (!item.isPickedUp)
         {
-         
+
             heldItem = item;
+            if (heldItem.transform.parent != null)
+            {
+                heldItem.GetComponentInParent<PlayerInteraction>().DropItem();
+            }
             holdPoint.transform.localPosition = heldItem.HoldPosition;
             holdPoint.transform.localRotation = heldItem.HoldRotation;
             heldItem.OnPickup(gameObject);

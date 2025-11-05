@@ -1,95 +1,79 @@
-﻿using System.Collections;
-using Unity.VisualScripting;
+﻿using Mirror;
 using UnityEngine;
-using static UnityEngine.ParticleSystem;
-using UnityEngine.UIElements;
+using System.Collections;
 
-public class DrinkableObject : MonoBehaviour
+public class DrinkableObject : NetworkBehaviour
 {
     public bool TestFill;
     public bool spillable;
     public int maxCapacity = 20;
+
     [SerializeField] LayerMask groundMask;
     [SerializeField] GameObject spillParticle;
-    [SerializeField] ParticleManager particleManager;
 
-    [SerializeField] int _capacity;
-    public int Capacity
-    {
-        get => _capacity;
-        set
-        {
-            if (_capacity == value) return;
-            _capacity = Mathf.Clamp(value, 0, maxCapacity);
-            OnCapacityChanged();
-        }
-    }
+    [SyncVar] public int Capacity;
 
     [SerializeField] int minLoss = 1;
     [SerializeField] int maxLoss = 10;
     [SerializeField] Water water;
 
-    private void Start()
+    public override void OnStartServer()
     {
-        Capacity = Random.Range(maxCapacity/3, maxCapacity);
-        particleManager = FindAnyObjectByType<ParticleManager>();
+        Capacity = Random.Range(maxCapacity / 3, maxCapacity);
         if (TestFill) StartCoroutine(TryFill());
+    }
+
+    public override void OnStartClient()
+    {
+        // Např. aktualizace vizuálu po připojení
+        if (water != null)
+            water.ChangeWaterLevel();
     }
 
     public virtual void ChangeCapacity(bool spill)
     {
         if (!spillable) return;
+        if (!isServer) return; // jen server mění hodnoty
 
-        if (spill)
+        if (spill && Capacity > 0)
         {
-            if (TestFill)
-            {
-                Capacity = Random.Range(0, maxCapacity);
-            }
-            else
-            {
-                if(Capacity != 0)
-                {
-                    Capacity -= Random.Range(minLoss , maxLoss);
-                    particleManager.SpawnParticle(spillParticle, gameObject.transform.position);
-                }
-            }
-            if(Capacity < 0) Capacity = 0;
+            Capacity -= Random.Range(minLoss, maxLoss);
+            if (Capacity < 0) Capacity = 0;
+            RpcPlaySpillEffect(transform.position);
         }
-        else
+        else if (!spill)
         {
             Capacity = maxCapacity;
         }
-    }
 
-    private void OnCapacityChanged()
-    {
         if (water != null)
             water.ChangeWaterLevel();
     }
 
     IEnumerator TryFill()
     {
-        while (true) 
+        while (true)
         {
-            if (TestFill)
-            {
-                ChangeCapacity(true);
-            }
+            ChangeCapacity(true);
             yield return new WaitForSeconds(1);
-
         }
+    }
 
+    [ClientRpc]
+    void RpcPlaySpillEffect(Vector3 pos)
+    {
+        Instantiate(spillParticle, pos, Quaternion.identity);
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Kontrola, jestli vrstva kolidujícího objektu je v groundMask
         if (((1 << collision.collider.gameObject.layer) & groundMask) != 0 && spillable)
         {
-            Debug.Log("Dotkl jsem se země!");
-            ChangeCapacity(true);
+            if (isServer)
+            {
+                Debug.Log("Dotkl jsem se země!");
+                ChangeCapacity(true);
+            }
         }
     }
 }
-
