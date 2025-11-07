@@ -11,7 +11,7 @@ public class DrinkableObject : NetworkBehaviour
     [SerializeField] LayerMask groundMask;
     [SerializeField] GameObject spillParticle;
 
-    [SyncVar] public int Capacity;
+    [SyncVar(hook = nameof(OnCapacityChanged))] public int Capacity;
 
     [SerializeField] int minLoss = 1;
     [SerializeField] int maxLoss = 10;
@@ -23,17 +23,16 @@ public class DrinkableObject : NetworkBehaviour
         if (TestFill) StartCoroutine(TryFill());
     }
 
-    public override void OnStartClient()
+    void OnCapacityChanged(int oldCap, int newCap)
     {
-        // Např. aktualizace vizuálu po připojení
         if (water != null)
             water.ChangeWaterLevel();
     }
 
+    [Server]
     public virtual void ChangeCapacity(bool spill)
     {
         if (!spillable) return;
-        if (!isServer) return; // jen server mění hodnoty
 
         if (spill && Capacity > 0)
         {
@@ -45,9 +44,6 @@ public class DrinkableObject : NetworkBehaviour
         {
             Capacity = maxCapacity;
         }
-
-        if (water != null)
-            water.ChangeWaterLevel();
     }
 
     IEnumerator TryFill()
@@ -70,10 +66,7 @@ public class DrinkableObject : NetworkBehaviour
         if (((1 << collision.collider.gameObject.layer) & groundMask) != 0 && spillable)
         {
             if (isServer)
-            {
-                Debug.Log("Dotkl jsem se země!");
                 ChangeCapacity(true);
-            }
         }
     }
 }

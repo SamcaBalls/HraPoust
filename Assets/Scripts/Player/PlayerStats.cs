@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Random = UnityEngine.Random;
 
 public class PlayerStats : NetworkBehaviour
@@ -13,7 +14,7 @@ public class PlayerStats : NetworkBehaviour
     {
         None,
         ShakyVision,
-        FastMovement,
+        InvertedInputs,
         Hallucination
     }
 
@@ -44,17 +45,15 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] RagdollHandler ragdollHandler;
     [SerializeField] CameraSwapper cameraSwapper;
     [SerializeField] HideLocalPlayerModel headShower;
+    Volume vol;
 
     public DrinkableObject drinkObject;   
 
     void Awake()
     {
-        tweakingActions = new Dictionary<TweakingState, Action>
-        {
-            { TweakingState.ShakyVision, () => Debug.Log("Tweak: ShakyVision") },
-            { TweakingState.FastMovement, () => Debug.Log("Tweak: FastMovement") },
-            { TweakingState.Hallucination, () => Debug.Log("Tweak: Hallucination") }
-        };
+        vol = FindAnyObjectByType<Volume>();
+
+        
     }
 
     void Start()
@@ -63,7 +62,16 @@ public class PlayerStats : NetworkBehaviour
         {
             cameraSwapper.SwapCamera(0);
             tweakingRange = Random.Range(75, 85);
+
+            tweakingActions = new Dictionary<TweakingState, Action>
+        {
+            { TweakingState.ShakyVision, () => TweakingBehaviors.instance.ShakyVision(vol) },
+            { TweakingState.InvertedInputs, () => TweakingBehaviors.instance.InvertedInputs() },
+            { TweakingState.Hallucination, () => TweakingBehaviors.instance.Hallucination() }
+        };
         }
+
+
     }
 
     void Update()
@@ -140,9 +148,9 @@ public class PlayerStats : NetworkBehaviour
     {
         Debug.Log($"{netIdentity.netId} zemřel!");
 
-        SetRagdollAll(true, -transform.forward * 10f);
+        SetRagdollAll(true, -transform.forward);
 
-        playerInteraction.DropItem();
+        playerInteraction.CmdDropItem();
 
         if (isServer)
             OnAnyPlayerDied?.Invoke(); // jen server to řeší
@@ -247,12 +255,15 @@ public class PlayerStats : NetworkBehaviour
     void StartTweaking()
     {
         Array values = Enum.GetValues(typeof(TweakingState));
-        int randomIndex = UnityEngine.Random.Range(0, values.Length);
+        int randomIndex = 1;//UnityEngine.Random.Range(0, values.Length);
         TweakingState chosen = (TweakingState)values.GetValue(randomIndex);
 
         currentTweaking = chosen;
 
         if (tweakingActions.ContainsKey(chosen))
+        {
             tweakingActions[chosen].Invoke();
+            Debug.Log($"Tweaking start na objektu {gameObject.name}, isLocalPlayer = {isLocalPlayer}, instance = {TweakingBehaviors.instance != null}");
+        }
     }
 }

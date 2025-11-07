@@ -1,37 +1,96 @@
-using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
+using Mirror;
 
 [DisallowMultipleComponent]
-public class ItemPickup : MonoBehaviour
+public class ItemPickup : NetworkBehaviour
 {
-    public string itemName = "Item";
-    public bool isPickedUp = false;
+    [SyncVar] public string itemName = "Item";
+    [SyncVar(hook = nameof(OnPickupStateChanged))] public bool isPickedUp = false;
+
     public Vector3 HoldPosition;
     public Quaternion HoldRotation;
     public bool useHands;
-    [SerializeField] float deathTime = 60;
-    public DrinkableObject drinkableObject;
 
+    [SerializeField] float deathTime = 60f;
+    [SerializeField] public DrinkableObject drinkableObject;
 
-    // Vol� se z player skriptu p�i interakci
-    public virtual void OnPickup(GameObject player)
+    private Rigidbody rb;
+
+    private void Awake()
     {
+        rb = GetComponent<Rigidbody>();
+    }
+
+    // 🟢 Server zvednutí — přijímá NetworkIdentity místo GameObjectu
+    [Server]
+    public void OnPickup(NetworkIdentity playerIdentity)
+    {
+        if (playerIdentity == null) return;
+        if (isPickedUp) return;
+
         isPickedUp = true;
-        Debug.Log($"Player picked up {itemName}");
+        StopAllCoroutines();
+
+        // Poslat klientům netId, ne GameObject
+        RpcAttachToPlayer(playerIdentity.netId);
+    }
+
+    // 🟢 Server položení
+    [Server]
+    public void OnDrop(Vector3 pos)
+    {
+        if (!isPickedUp) return;
+
+        isPickedUp = false;
+        RpcDetachFromPlayer(pos);
+        StartCoroutine(DeathTimer());
+    }
+
+    void OnPickupStateChanged(bool oldState, bool newState)
+    {
+        if (rb != null) rb.isKinematic = newState;
+    }
+
+    [ClientRpc]
+    void RpcAttachToPlayer(uint playerNetId)
+    {
+        if (!NetworkClient.spawned.TryGetValue(playerNetId, out var obj))
+            return;
+
+        var player = obj.GetComponent<PlayerInteraction>();
+        if (player == null) return;
+
+        transform.SetParent(player.holdPoint);
+        transform.localPosition = Vector3.zero;
+        transform.localRotation = Quaternion.identity;
+
+        player.holdPoint.localPosition = HoldPosition;
+        player.holdPoint.localRotation = HoldRotation;
+        if (rb) rb.isKinematic = true;
+
+        Debug.Log("Přiděláno k HoldPoint"); 
+    }
+
+    [ClientRpc]
+    void RpcDetachFromPlayer(Vector3 pos)
+    {
+        transform.SetParent(null);
+        transform.position = pos;
+        if (rb) rb.isKinematic = false;
     }
 
     public virtual void OnInteract(GameObject player)
     {
-        Debug.Log($"Player used {itemName}");
+        Debug.Log(name + ": Interacting...");
     }
 
+    [Server]
     public IEnumerator DeathTimer()
     {
         float elapsed = 0f;
         while (elapsed < deathTime)
         {
-            // pokud ho n�kdo zvedne, timer se zru��
             if (isPickedUp)
                 yield break;
 
@@ -39,10 +98,6 @@ public class ItemPickup : MonoBehaviour
             yield return null;
         }
 
-        Debug.Log($"{itemName} destroyed after being left on ground");
-        Destroy(gameObject);
+        NetworkServer.Destroy(gameObject);
     }
-
-
-
 }

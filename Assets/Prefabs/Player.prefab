@@ -1537,7 +1537,6 @@ GameObject:
   - component: {fileID: 6326320884888109334}
   - component: {fileID: 2588840675876939351}
   - component: {fileID: 7209537533012569676}
-  - component: {fileID: 8776194609480059222}
   m_Layer: 6
   m_Name: PlayerCamera
   m_TagString: MainCamera
@@ -1687,28 +1686,6 @@ MonoBehaviour:
   interactRange: 3
   clampAngle: 85
   look: {fileID: -5630151704836100654, guid: 052faaac586de48259a63d0c4782560b, type: 3}
---- !u!114 &8776194609480059222
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1824785149124489794}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b6e0386a63fd3564a8f18221578664b9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 884727997153240965}
-  interactRange: 3
-  interactLayer:
-    serializedVersion: 2
-    m_Bits: 256
-  interact: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
-  holdPoint: {fileID: 3560454979262778134}
-  playerStats: {fileID: 6016705213609321900}
-  animator: {fileID: 916566929777805106}
-  handPosition: {x: 0, y: 0.15, z: 0.598}
 --- !u!1 &1906310529879518940
 GameObject:
   m_ObjectHideFlags: 0
@@ -4974,6 +4951,7 @@ GameObject:
   - component: {fileID: 916566929777805106}
   - component: {fileID: 7650460851447794126}
   - component: {fileID: 6392475910981707718}
+  - component: {fileID: 2771610651066742726}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -5141,12 +5119,12 @@ MonoBehaviour:
   fatigue: 0
   maxHealth: 100
   maxFatigue: 100
-  baseFatigueRate: 1
-  runFatigueRate: 3
+  baseFatigueRate: 0.5
+  runFatigueRate: 1
   fatigueRecoveryRate: 2
   tweakingRange: 0
   lockinIn: 0
-  playerInteraction: {fileID: 8776194609480059222}
+  playerInteraction: {fileID: 2771610651066742726}
   ragdollHandler: {fileID: 8092633473532240395}
   cameraSwapper: {fileID: 3675721233765375065}
   headShower: {fileID: 6282391909551969834}
@@ -5430,6 +5408,32 @@ MonoBehaviour:
   serverOnly: 0
   visibility: 0
   hasSpawned: 0
+--- !u!114 &2771610651066742726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6679807213962537312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6e0386a63fd3564a8f18221578664b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  cam: {fileID: 884727997153240965}
+  interactRange: 3
+  interactLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  interact: {fileID: 1781555164194001046, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  holdPoint: {fileID: 3560454979262778134}
+  playerStats: {fileID: 6016705213609321900}
+  animator: {fileID: 916566929777805106}
+  handPosition: {x: 0, y: 0.15, z: 0.598}
+  player: {fileID: 6679807213962537312}
 --- !u!1 &6850059056101496995
 GameObject:
   m_ObjectHideFlags: 0

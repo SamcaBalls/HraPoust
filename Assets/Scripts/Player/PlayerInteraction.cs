@@ -1,29 +1,33 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Mirror;
 
-public class PlayerInteraction : MonoBehaviour
+public class PlayerInteraction : NetworkBehaviour
 {
+    [Header("References")]
     [SerializeField] private Camera cam;
     [SerializeField] private float interactRange = 3f;
     [SerializeField] private LayerMask interactLayer;
     [SerializeField] private InputActionReference interact;
-    [SerializeField] private Transform holdPoint;
+    [SerializeField] public Transform holdPoint;
     [SerializeField] private PlayerStats playerStats;
     [SerializeField] Animator animator;
     [SerializeField] Vector3 handPosition;
+    [SerializeField] GameObject player;
 
-    private ItemPickup currentTarget;
+    [SyncVar] private NetworkIdentity heldItemNet;
+
     private ItemPickup heldItem;
 
-
-
-    private void Start()
+    public override void OnStartLocalPlayer()
     {
         interact.action.Enable();
     }
 
-    private void Update()
+    void Update()
     {
+        if (!isLocalPlayer) return;
+
         if (heldItem == null)
             HandleRaycast();
         else
@@ -35,114 +39,98 @@ public class PlayerInteraction : MonoBehaviour
         Ray ray = new Ray(cam.transform.position, cam.transform.forward);
         if (Physics.Raycast(ray, out RaycastHit hit, interactRange, interactLayer))
         {
-            ItemPickup pickup = hit.collider.GetComponent<ItemPickup>();
-            if (pickup != null)
+            if (Keyboard.current.eKey.wasPressedThisFrame)
             {
-                currentTarget = pickup;
-
-                if (Input.GetKeyDown(KeyCode.E))
-                    PickupItem(pickup);
+                var item = hit.collider.GetComponent<ItemPickup>();
+                if (item != null && !item.isPickedUp)
+                    CmdPickupItem(item.netIdentity);
             }
-        }
-        else
-        {
-            currentTarget = null;
         }
     }
 
-    private void PickupItem(ItemPickup item)
+    [Command]
+    void CmdPickupItem(NetworkIdentity itemNet)
     {
-        if (!item.isPickedUp)
-        {
+        if (heldItemNet != null) return; // už nìco drží
 
-            heldItem = item;
-            if (heldItem.transform.parent != null)
-            {
-                heldItem.GetComponentInParent<PlayerInteraction>().DropItem();
-            }
-            holdPoint.transform.localPosition = heldItem.HoldPosition;
-            holdPoint.transform.localRotation = heldItem.HoldRotation;
-            heldItem.OnPickup(gameObject);
-            playerStats.drinkObject = heldItem.GetComponent<DrinkableObject>();
+        var item = itemNet.GetComponent<ItemPickup>();
+        if (item == null || item.isPickedUp) return;
 
-            Rigidbody rb = heldItem.GetComponent<Rigidbody>();
-            if (rb != null) rb.isKinematic = true;
+        heldItemNet = itemNet;
+        heldItem = item;
+        item.OnPickup(player.GetComponent<NetworkIdentity>());
 
-            heldItem.transform.SetParent(holdPoint);
-            heldItem.transform.localPosition = Vector3.zero;
-            heldItem.transform.localRotation = Quaternion.identity;
-            if (heldItem.useHands)
-            {
-                animator.SetBool("Carrying", true);
-            }
-        }
-        else
-        {
-            Debug.Log("Objekt už je sebrán");
-            return;
-        }
+        playerStats.drinkObject = item.drinkableObject;
+
+        if (item.useHands)
+            RpcSetCarryingAnim(true);
+    }
 
 
+
+    [ClientRpc]
+    void RpcSetCarryingAnim(bool state)
+    {
+        if (animator != null)
+            animator.SetBool("Carrying", state);
     }
 
     private void HandleHeldItem()
     {
-        // Udržuj item pøed hráèem
-        heldItem.transform.position = Vector3.Lerp(
-            heldItem.transform.position,
-            holdPoint.position,
-            Time.deltaTime * 10f
-        );
-        heldItem.transform.rotation = Quaternion.Lerp(
-            heldItem.transform.rotation,
-            holdPoint.rotation,
-            Time.deltaTime * 10f
-        );
 
-        // Drop
+        if (!isLocalPlayer) return;
+
         if (Keyboard.current.qKey.wasPressedThisFrame)
-            DropItem();
+            CmdDropItem();
 
-        if (Input.GetKeyDown(KeyCode.Mouse1))
-            UseItem();
-        if (Input.GetKeyDown(KeyCode.R))
-            HandItem();
+        if (Input.GetMouseButtonDown(1))
+            CmdUseItem();
 
-        if (Input.GetKeyUp(KeyCode.R))
-            UnhandItem();
+        if (Keyboard.current.rKey.wasPressedThisFrame)
+            CmdHandItem(true);
+
+        if (Keyboard.current.rKey.wasReleasedThisFrame)
+            CmdHandItem(false);
     }
 
-
-    public void DropItem()
+    [Command]
+    public void CmdDropItem()
     {
-        if(heldItem == null) return;
+        if (heldItemNet == null) return;
 
-        heldItem.transform.SetParent(null);
-        Rigidbody rb = heldItem.GetComponent<Rigidbody>();
-        if (rb != null) rb.isKinematic = false;
-        heldItem.isPickedUp = false;
-        StartCoroutine(heldItem.DeathTimer());
+        var item = heldItemNet.GetComponent<ItemPickup>();
+        if (item == null) return;
+
+        Vector3 dropPos = holdPoint.position + transform.forward * 0.5f;
+        item.OnDrop(dropPos);
+
+        heldItemNet = null;
         heldItem = null;
         playerStats.drinkObject = null;
-        animator.SetBool("Carrying", false);
+        RpcSetCarryingAnim(false);
     }
 
-    private void UseItem()
+    [Command]
+    void CmdUseItem()
     {
-        heldItem.OnInteract(playerStats.gameObject);
+        if (heldItemNet == null) return;
+        var item = heldItemNet.GetComponent<ItemPickup>();
+        item.OnInteract(player);
     }
 
-    private void HandItem()
+    [Command]
+    void CmdHandItem(bool active)
     {
-        animator.SetBool("Hand", true);
-        heldItem.isPickedUp = false;
-        holdPoint.transform.localPosition = handPosition; 
+        RpcHandItem(active);
     }
 
-    public void UnhandItem()
+    [ClientRpc]
+    void RpcHandItem(bool active)
     {
-        animator.SetBool("Hand", false);
-        heldItem.isPickedUp = true;
-        holdPoint.transform.localPosition = heldItem.HoldPosition;
+        animator.SetBool("Hand", active);
+        if (active)
+            holdPoint.localPosition = handPosition;
+        else if (heldItem != null)
+            holdPoint.localPosition = heldItem.HoldPosition;
     }
 }

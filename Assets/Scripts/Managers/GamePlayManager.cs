@@ -5,8 +5,9 @@ public class GamePlayManager : NetworkBehaviour
 {
     [SerializeField] GameObject bowlPrefab;
 
-    public void Start()
+    public override void OnStartServer()
     {
+        if (!isServer) return;
         Debug.Log("[GamePlayManager] Server initialized.");
 
         SpawnWaterObject();
@@ -14,7 +15,7 @@ public class GamePlayManager : NetworkBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M) && isServer)
         {
             SpawnWaterObject();
         }
