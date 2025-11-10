@@ -98,6 +98,8 @@ public class PlayerInteraction : NetworkBehaviour
     {
         if (heldItemNet == null) return;
 
+        Debug.Log("Dropuju");
+
         var item = heldItemNet.GetComponent<ItemPickup>();
         if (item == null) return;
 

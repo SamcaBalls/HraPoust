@@ -14,8 +14,7 @@ public class PlayerStats : NetworkBehaviour
     {
         None,
         ShakyVision,
-        InvertedInputs,
-        Hallucination
+        PartialBlindness,
     }
 
     [SyncVar] private TweakingState currentTweaking = TweakingState.None;
@@ -38,6 +37,7 @@ public class PlayerStats : NetworkBehaviour
     bool isSafe = false;
     bool ragdoll = false;
     public bool lockinIn = false;
+    bool reseted = true;
 
     public static event Action OnAnyPlayerDied;
 
@@ -45,16 +45,9 @@ public class PlayerStats : NetworkBehaviour
     [SerializeField] RagdollHandler ragdollHandler;
     [SerializeField] CameraSwapper cameraSwapper;
     [SerializeField] HideLocalPlayerModel headShower;
-    Volume vol;
 
     public DrinkableObject drinkObject;   
 
-    void Awake()
-    {
-        vol = FindAnyObjectByType<Volume>();
-
-        
-    }
 
     void Start()
     {
@@ -65,9 +58,11 @@ public class PlayerStats : NetworkBehaviour
 
             tweakingActions = new Dictionary<TweakingState, Action>
         {
-            { TweakingState.ShakyVision, () => TweakingBehaviors.instance.ShakyVision(vol) },
-            { TweakingState.InvertedInputs, () => TweakingBehaviors.instance.InvertedInputs() },
-            { TweakingState.Hallucination, () => TweakingBehaviors.instance.Hallucination() }
+            { TweakingState.None, () => TweakingBehaviors.instance.ResetVolume() },
+            { TweakingState.ShakyVision, () => TweakingBehaviors.instance.ShakyVision() },
+            { TweakingState.PartialBlindness, () => TweakingBehaviors.instance.PartialBlindness() },
+            /*{ TweakingState.InvertedInputs, () => TweakingBehaviors.instance.InvertedInputs() },
+            { TweakingState.Hallucination, () => TweakingBehaviors.instance.Hallucination() }*/
         };
         }
 
@@ -81,10 +76,15 @@ public class PlayerStats : NetworkBehaviour
         HandleFatigue();
 
         if (Input.GetKeyDown(KeyCode.K))
-            CmdTakeDamage(10);
+            CmdTakeDamage(50);
 
         if (Input.GetKeyDown(KeyCode.L))
             StartCoroutine(LockIn());
+
+        if (Input.GetKeyDown(KeyCode.T)) 
+            fatigue = tweakingRange - 1;
+
+
     }
 
     void HandleFatigue()
@@ -104,7 +104,14 @@ public class PlayerStats : NetworkBehaviour
         }
         if (fatigue > tweakingRange && currentTweaking == TweakingState.None)
         {
+            reseted = false;
             StartTweaking();
+        }
+        else if(fatigue < tweakingRange && !reseted)
+        {
+            reseted = true;
+            currentTweaking = TweakingState.None;
+            tweakingActions[0].Invoke();
         }
     }
 
@@ -255,15 +262,28 @@ public class PlayerStats : NetworkBehaviour
     void StartTweaking()
     {
         Array values = Enum.GetValues(typeof(TweakingState));
-        int randomIndex = 1;//UnityEngine.Random.Range(0, values.Length);
-        TweakingState chosen = (TweakingState)values.GetValue(randomIndex);
+        int tweakCount = UnityEngine.Random.Range(2, 3); // 🎲 náhodně 1–2 typy
 
-        currentTweaking = chosen;
+        // 🔀 vytvoříme seznam dostupných stavů a zamícháme ho
+        List<TweakingState> shuffled = new List<TweakingState>();
+        foreach (var v in values) shuffled.Add((TweakingState)v);
+        shuffled.Shuffle(); // vlastní extension níže
 
-        if (tweakingActions.ContainsKey(chosen))
+        // 🎯 vybereme prvních N
+        List<TweakingState> chosenTweaks = shuffled.GetRange(0, Mathf.Min(tweakCount, shuffled.Count));
+
+        foreach (TweakingState chosen in chosenTweaks)
         {
-            tweakingActions[chosen].Invoke();
-            Debug.Log($"Tweaking start na objektu {gameObject.name}, isLocalPlayer = {isLocalPlayer}, instance = {TweakingBehaviors.instance != null}");
+            currentTweaking = chosen;
+
+            if (tweakingActions.ContainsKey(chosen) && chosen != TweakingState.None)
+            {
+                tweakingActions[chosen].Invoke();
+                Debug.Log($"Tweaking start: {chosen} na objektu {gameObject.name}, isLocalPlayer = {isLocalPlayer}, instance = {TweakingBehaviors.instance != null}");
+            }
         }
     }
+
+
+
 }

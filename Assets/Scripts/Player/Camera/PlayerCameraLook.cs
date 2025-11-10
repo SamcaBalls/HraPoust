@@ -17,7 +17,6 @@ public class PlayerCameraLook : CameraScript
 
     [SerializeField] private InputActionReference look;
 
-    private Camera cam;
     private ItemPickup currentTarget;
 
     public override void OnStartLocalPlayer()
