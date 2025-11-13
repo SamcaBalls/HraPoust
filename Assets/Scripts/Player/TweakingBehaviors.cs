@@ -1,6 +1,7 @@
 ﻿using SteamLobbyTutorial;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
@@ -13,6 +14,9 @@ public class TweakingBehaviors : MonoBehaviour
 
     // Pro uložení běžících coroutin
     private List<Coroutine> activeCoroutines = new List<Coroutine>();
+
+    private bool isResetting = false;
+
 
     private void Awake()
     {
@@ -29,6 +33,7 @@ public class TweakingBehaviors : MonoBehaviour
         public float colorContrast;
         public Color colorFilter;
         public float motionBlurIntensity;
+        public float bloomIntensity;
         public float depthFocalLength;
         public float depthFocusDistance;
         public DepthOfFieldMode depthMode;
@@ -41,7 +46,8 @@ public class TweakingBehaviors : MonoBehaviour
     private ColorAdjustments colorAdjustments;
     private MotionBlur motionBlur;
     private DepthOfField depthOfField;
-    private Vignette vignette;
+    private Bloom bloom;
+    public float startVolume;
 
     // Uloží originální hodnoty a získá reference na komponenty
     private void SaveOriginalProfile()
@@ -53,6 +59,7 @@ public class TweakingBehaviors : MonoBehaviour
         vol.profile.TryGet(out colorAdjustments);
         vol.profile.TryGet(out motionBlur);
         vol.profile.TryGet(out depthOfField);
+        vol.profile.TryGet(out bloom);
 
         // Uložení default hodnot
         defaults = new EffectDefaults
@@ -66,7 +73,8 @@ public class TweakingBehaviors : MonoBehaviour
             motionBlurMode = motionBlur?.mode.value ?? MotionBlurMode.CameraOnly,
             depthFocalLength = depthOfField?.focalLength.value ?? 50f,
             depthFocusDistance = depthOfField?.focusDistance.value ?? 10f,
-            depthMode = depthOfField?.mode.value ?? DepthOfFieldMode.Off
+            depthMode = depthOfField?.mode.value ?? DepthOfFieldMode.Off,
+            bloomIntensity = bloom?.intensity.value ?? 1f,
         };
 
         Debug.Log("✅ Původní hodnoty volume uloženy");
@@ -190,8 +198,47 @@ public class TweakingBehaviors : MonoBehaviour
 
     public void Hallucination()
     {
+        if (bloom == null)
+            return;
+
         Debug.Log("Hallucination effect started");
+
+        StartCoroutine(HallucinationCoroutine(100f, 3f)); // cílová intenzita 10, trvání 3s
     }
+
+    IEnumerator HallucinationCoroutine(float targetIntensity, float duration)
+    {
+        isResetting = false; // 👈 začínáme nový efekt
+        float startIntensity = bloom.intensity.value;
+        float elapsed = 0f;
+
+        // Fade in
+        while (elapsed < duration && !isResetting)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            bloom.intensity.value = Mathf.Lerp(startIntensity, targetIntensity, t);
+            yield return null;
+        }
+
+        bloom.intensity.value = targetIntensity;
+
+        // Loop – ale přerušitelný
+        while (true)
+        {
+            float randomTime = Random.Range(0.1f, 3f);
+            yield return new WaitForSeconds(randomTime);
+            if (isResetting) break;
+            float randomPeak = Random.Range(50f, 90f);
+            
+            bloom.intensity.value = bloom.intensity.value + randomPeak;
+            yield return new WaitForSeconds(0.05f);
+            bloom.intensity.value = targetIntensity;
+        }
+    }
+
+
+
 
     public void FakeStructure()
     {
@@ -203,9 +250,41 @@ public class TweakingBehaviors : MonoBehaviour
         Debug.Log("Strange sounds effect started");
     }
 
-    public void Deafness()
+    public void Deafness(Settings settings)
     {
-        Debug.Log("Deafness effect started");
+        startVolume = settings.masterVolume;
+        StartCoroutine(DeafnessCoroutine(settings, 3f)); // 3 sekundy
+    }
+
+    IEnumerator DeafnessCoroutine(Settings settings, float duration)
+    {
+        float start = settings.masterVolume;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            settings.masterVolume = Mathf.Lerp(start, 0f, t);
+            yield return null;
+        }
+
+        settings.masterVolume = 0f;
+
+        //Play deaf ambience
+
+        while (!isResetting)
+        {
+            float randomTime = Random.Range(2, 12);
+            yield return new WaitForSeconds(randomTime);
+            //play beep sound
+        }
+    }
+
+
+    public void Loudness(Settings settings)
+    {
+        Debug.Log("Loudness effect started");
     }
 
     IEnumerator PlayStrangeSounds()
@@ -253,14 +332,12 @@ public class TweakingBehaviors : MonoBehaviour
     // === Reset jednoho volume ===
     public void ResetVolume()
     {
-        // 1. Zastavit všechny běžící coroutines
+        isResetting = true; // 🔥 Zastaví všechny nekonečné smyčky
         StopAllActiveCoroutines();
-
-        // 2. Resetovat hodnoty na default
         StartCoroutine(ResetToDefaults());
-
         Debug.Log($"✅ Volume {vol.name} resetován zpět na původní hodnoty.");
     }
+
 
     // Resetuje všechny hodnoty na původní default
     IEnumerator ResetToDefaults()
@@ -284,6 +361,12 @@ public class TweakingBehaviors : MonoBehaviour
             depthOfField.focalLength.value = defaults.depthFocalLength;
             depthOfField.focusDistance.value = defaults.depthFocusDistance;
             depthOfField.mode.value = defaults.depthMode;
+        }
+
+        if(bloom != null)
+        {
+            bloom.intensity.value = defaults.bloomIntensity;
+            Debug.Log("sybau " + defaults.bloomIntensity);
         }
 
         yield return StartCoroutine(Blink(false));

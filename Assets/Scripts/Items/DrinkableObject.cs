@@ -66,7 +66,23 @@ public class DrinkableObject : NetworkBehaviour
         if (((1 << collision.collider.gameObject.layer) & groundMask) != 0 && spillable)
         {
             if (isServer)
+            {
+                if (Capacity != 0 && isClient)
+                {
+                    AudioManager.Instance.CmdPlayInRange(transform.position, "Spill", 10);
+                    AudioManager.Instance.CmdPlayInRange(transform.position, "WaterSplash", 10);
+                }
+                else
+                {
+                    AudioManager.Instance.CmdPlayInRange(transform.position, "Spill", 10);
+                }
+
                 ChangeCapacity(true);
+
+                
+            }
+
+
         }
     }
 }

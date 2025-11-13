@@ -15,6 +15,7 @@ public class PlayerStats : NetworkBehaviour
         None,
         ShakyVision,
         PartialBlindness,
+        Hallucination
     }
 
     [SyncVar] private TweakingState currentTweaking = TweakingState.None;
@@ -61,8 +62,8 @@ public class PlayerStats : NetworkBehaviour
             { TweakingState.None, () => TweakingBehaviors.instance.ResetVolume() },
             { TweakingState.ShakyVision, () => TweakingBehaviors.instance.ShakyVision() },
             { TweakingState.PartialBlindness, () => TweakingBehaviors.instance.PartialBlindness() },
-            /*{ TweakingState.InvertedInputs, () => TweakingBehaviors.instance.InvertedInputs() },
-            { TweakingState.Hallucination, () => TweakingBehaviors.instance.Hallucination() }*/
+            //{ TweakingState.InvertedInputs, () => TweakingBehaviors.instance.InvertedInputs() },
+            { TweakingState.Hallucination, () => TweakingBehaviors.instance.Hallucination() }
         };
         }
 
@@ -73,6 +74,9 @@ public class PlayerStats : NetworkBehaviour
     {
         if (!isLocalPlayer) return;
 
+        if (Input.GetKeyDown(KeyCode.T))
+            fatigue = tweakingRange - 1;
+
         HandleFatigue();
 
         if (Input.GetKeyDown(KeyCode.K))
@@ -81,8 +85,7 @@ public class PlayerStats : NetworkBehaviour
         if (Input.GetKeyDown(KeyCode.L))
             StartCoroutine(LockIn());
 
-        if (Input.GetKeyDown(KeyCode.T)) 
-            fatigue = tweakingRange - 1;
+
 
 
     }
